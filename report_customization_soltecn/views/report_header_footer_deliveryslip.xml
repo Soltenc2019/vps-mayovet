@@ -18,13 +18,13 @@
                             <div class="col-4" t-attf-style="display: -webkit-box; -webkit-box-pack: center; -webkit-box-orient: vertical;">
                                 <div class="border border-dark rounded text-center p-2">
                                     <div>
-                                        <span class="font-weight-bold fs-6">RUC <t t-esc="o.company_id.vat"/></span>
+                                        <span class="font-weight-bold fs-6">RUC <t t-out="o.company_id.vat"/></span>
                                     </div>
                                     <div>
                                         <span class="font-weight-bold fs-6 text-uppercase">GUÍA DE REMISIÓN REMITENTE ELECTRÓNICA</span>
                                     </div>
                                     <div>
-                                        <span class="font-weight-bold fs-6" t-esc="o.serial_referral_guide or 'NO VALID'"/>
+                                        <span class="font-weight-bold fs-6" t-out="o.serial_referral_guide or 'NO VALID'"/>
                                     </div>
                                 </div>
                             </div>
@@ -40,7 +40,7 @@
                     <div t-att-class="'pt-' + str(company.padding_top_layout)">
                         <t t-call="web.address_layout"/>
                     </div>
-                    <t t-raw="0"/>
+                    <t t-out="0"/>
                 </div>
             </xpath>
         </template>

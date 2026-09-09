@@ -1,12 +1,13 @@
 from requests.exceptions import ConnectionError as ReqConnectionError, HTTPError, InvalidSchema, InvalidURL, ReadTimeout
-from zeep.wsse.username import UsernameToken
-from zeep import Client, Settings
-from zeep.transports import Transport
+from odoo.tools.zeep.wsse.username import UsernameToken
+from odoo.tools.zeep import Client, Settings, Transport
+from odoo.tools.zeep.exceptions import Fault
 from lxml import etree
 from lxml import objectify
 from copy import deepcopy
 
-from odoo import models, api, _, _lt
+from odoo import models, api, _
+from odoo.tools.translate import LazyTranslate
 from odoo.addons.iap.tools.iap_tools import iap_jsonrpc
 from odoo.exceptions import AccessError
 from odoo.tools import float_round, html_escape
@@ -16,6 +17,7 @@ import logging
 import base64
 
 _logger = logging.getLogger(__name__)
+_lt = LazyTranslate(__name__)
 from markupsafe import Markup, escape
 class AccountEdiFormat(models.Model):
     _inherit = 'account.edi.format'
@@ -36,7 +38,9 @@ class AccountEdiFormat(models.Model):
         # XML firmado
         # =========================
         void_tree = objectify.fromstring(void_str)
-        void_tree = company.l10n_pe_edi_certificate_id.sudo()._sign(void_tree)
+        # Odoo 18: el certificado es certificate.certificate y la firma se hace
+        # desde account.edi.format._l10n_pe_sign().
+        void_tree = self._l10n_pe_sign(company.sudo().l10n_pe_edi_certificate_id, void_tree)
 
         void_str = etree.tostring(
             void_tree,
@@ -220,8 +224,8 @@ class AccountEdiFormat(models.Model):
             # float_round(line.price_total / line.quantity, precision_digits=price_precision) if line.quantity else 0.0
         # raise ValidationError(str(values['invoice_line_vals_list']))
         # Tax details.
-        def grouping_key_generator(base_line, tax_values):
-            tax = tax_values['tax_repartition_line'].tax_id
+        def grouping_key_generator(base_line, tax_data):
+            tax = tax_data['tax']
             return {
                 'l10n_pe_edi_code': tax.tax_group_id.l10n_pe_edi_code,
                 'l10n_pe_edi_international_code': tax.l10n_pe_edi_international_code,

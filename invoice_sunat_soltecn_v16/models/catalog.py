@@ -1,29 +1,20 @@
 from odoo import models, fields, api
-from odoo.osv import expression
 
 class CatalogTmpl(models.Model):
     _name = 'l10n_pe_edi.catalog.tmpl'
     _description = 'Catalog Template'
+    # Odoo 18: reemplaza el antiguo override de _name_search
+    _rec_names_search = ['name', 'code']
 
     active = fields.Boolean(string='Active', default=True)
     code = fields.Char(string='Code', size=4, index=True, required=True)
     name = fields.Char(string='Description', index=True, required=True)
 
-    def name_get(self):
-        result = []
+    @api.depends('code', 'name')
+    def _compute_display_name(self):
         for table in self:
-            result.append((table.id, "%s %s" % (table.code, table.name or '')))
-        return result
+            table.display_name = "%s %s" % (table.code, table.name or '')
 
-    @api.model#ADD PARAMETER order=None
-    def _name_search(self, name=None, args=None, operator='ilike', limit=100, name_get_uid=None,order=None):
-        args = args or []
-        if operator == 'ilike' and not (name or '').strip():
-            domain = []
-        else:
-            domain = ['|', ('name', 'ilike', name), ('code', 'ilike', name)]
-        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        
 class Catalog23(models.Model):
     _name = "l10n_pe_edi.catalog.23"
     _description = 'Codigos- Regimenes de Retencion'

@@ -77,13 +77,13 @@
                             <th name="th_quantity" class="text-end">Quantity</th>
                             <th name="th_quantity" class="text-end">UOM</th>
                             <th name="th_priceunit" class="text-end">Unit Price</th>
-                            <th name="th_discount" t-if="display_discount" class="text-end" groups="product.group_discount_per_so_line">
+                            <th name="th_discount" t-if="display_discount" class="text-end">
                                 <span>Disc.%</span>
                             </th>
                             <th name="th_taxes" class="text-end">Taxes</th>
                             <th name="th_subtotal" class="text-end">
-                                <span groups="account.group_show_line_subtotals_tax_excluded">Amount</span>
-                                <span groups="account.group_show_line_subtotals_tax_included">Total Price</span>
+                                <span t-if="doc.company_price_include != 'tax_included'">Amount</span>
+                                <span t-if="doc.company_price_include == 'tax_included'">Total Price</span>
                             </th>
                         </tr>
                     </thead>
@@ -93,12 +93,12 @@
 
                         <t t-foreach="lines_to_report" t-as="line">
 
-                            <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
-                            <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
+                            <t t-if="doc.company_price_include != 'tax_included'" t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
+                            <t t-if="doc.company_price_include == 'tax_included'" t-set="current_subtotal" t-value="current_subtotal + line.price_total"/>
 
                             <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                                 <t t-if="not line.display_type">
-                                    <td name="td_name"><span t-esc="line_index + 1"/></td>
+                                    <td name="td_name"><span t-out="line_index + 1"/></td>
                                     <td name="td_name"><span t-field="line.name"/></td>
                                     <td name="td_quantity" class="text-end">
                                         <span t-field="line.product_uom_qty"/>
@@ -109,15 +109,15 @@
                                     <td name="td_priceunit" class="text-end">
                                         <span t-field="line.price_unit"/>
                                     </td>
-                                    <td t-if="display_discount" class="text-end" groups="product.group_discount_per_so_line">
+                                    <td t-if="display_discount" class="text-end">
                                         <span t-field="line.discount"/>
                                     </td>
                                     <td name="td_taxes" class="text-end">
                                         <span t-out="', '.join(map(lambda x: (x.description or x.name), line.tax_id))"/>
                                     </td>
                                     <td t-if="not line.is_downpayment" name="td_subtotal" class="text-end o_price_total">
-                                        <span t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
-                                        <span t-field="line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
+                                        <span t-if="doc.company_price_include != 'tax_included'" t-field="line.price_subtotal"/>
+                                        <span t-if="doc.company_price_include == 'tax_included'" t-field="line.price_total"/>
                                     </td>
                                 </t>
                                 <t t-elif="line.display_type == 'line_section'">
@@ -175,7 +175,7 @@
 
                             <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                                 <t t-if="not line.display_type">
-                                    <td name="td_name"><span t-esc="line_index + 1"/></td>
+                                    <td name="td_name"><span t-out="line_index + 1"/></td>
                                     <td name="td_name"><span t-field="line.name"></span></td>
                                     <!-- <td name="td_quantity" class="text-end">
                                         <span t-field="line.product_uom_qty"></span>

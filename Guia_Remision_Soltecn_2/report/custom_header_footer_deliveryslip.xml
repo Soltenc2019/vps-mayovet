@@ -34,13 +34,13 @@
                         <div class="border border-dark rounded mb-3 text-center" style="font-size: 1rem !important;">
                                 <div class="p-2">
                                     <div>
-                                        <span class="font-weight-bold">RUC <t t-esc="o.company_id.vat"/></span>
+                                        <span class="font-weight-bold">RUC <t t-out="o.company_id.vat"/></span>
                                     </div>
                                     <div>
                                         <span class="font-weight-bold text-uppercase">GUÍA DE REMISIÓN REMITENTE ELECTRÓNICA</span>
                                     </div>
                                     <div>
-                                        <span class="font-weight-bold" t-esc="o.serial_referral_guide or 'NO VALID'"/>
+                                        <span class="font-weight-bold" t-out="o.serial_referral_guide or 'NO VALID'"/>
                                         <!-- <span>T001-00000024</span> -->
                                     </div>
                                 </div>
@@ -54,7 +54,7 @@
                 <!-- This div ensures that the address is not cropped by the header. -->
                 <t t-call="web.address_layout"/>
             </div>
-            <t t-raw="0"/>
+            <t t-out="0"/>
             <!-- <br/>
             <br/>
             <br/>
@@ -66,7 +66,7 @@
                     <li t-if="company.phone" class="list-inline-item"><span class="o_force_ltr" t-field="company.phone"/></li>
                     <li t-if="company.email" class="list-inline-item"><span t-field="company.email"/></li>
                     <li t-if="company.website" class="list-inline-item"><span t-field="company.website"/></li>
-                    <li t-if="company.vat" class="list-inline-item"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                    <li t-if="company.vat" class="list-inline-item"><t t-out="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
                 </ul>
                 <div t-field="company.report_footer"/>
                 <div t-if="report_type == 'pdf'">

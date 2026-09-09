@@ -3,6 +3,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class TransportationReasonOther(models.Model): 
     _name = 'transportation.reason.other'
+    _description = 'Motivo de traslado - Otros'
 
     name = fields.Char(string="Nombre")
     active = fields.Boolean(string="Activo", default=True)

@@ -11,7 +11,7 @@
 
 {
     'name' : 'Validador de RUC - Peru',
-    'version' : '17.0.1.0.0',
+    'version' : '18.0.1.0.0',
     'author' : 'OPeru',
     'category' : 'Generic Modules/Base',
     'summary': 'RUC validator - PERU',
@@ -37,9 +37,6 @@ $ sudo pip3 install beautifulsoup4
         'views/res_partner_view.xml',
         'views/res_config_settings_views.xml',
         'views/res_company_views.xml',
-    ],
-    'qweb' : [
-
     ],
     'demo': [
         #'demo/account_demo.xml',

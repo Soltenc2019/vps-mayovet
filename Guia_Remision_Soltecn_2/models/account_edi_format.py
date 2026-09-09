@@ -3,15 +3,13 @@ import zipfile
 import io
 import logging
 from requests.exceptions import ConnectionError, HTTPError, InvalidSchema, InvalidURL, ReadTimeout
-from zeep.wsse.username import UsernameToken
-from zeep import Client, Settings
-from zeep.exceptions import Fault
-from zeep.transports import Transport
 from lxml import etree
 from lxml.objectify import fromstring
 from copy import deepcopy
+from datetime import datetime
+from pytz import timezone
 
-from odoo import models, fields, api, _, _lt
+from odoo import models, fields, api, _
 from odoo.addons.iap.tools.iap_tools import iap_jsonrpc
 from odoo.exceptions import AccessError
 from odoo.tools import html_escape
@@ -94,7 +92,7 @@ class AccountEdiFormat(models.Model):
                 return None
             return '%.*f' % (precision, amount)
 
-        certificate_date = self.env['l10n_pe_edi.certificate']._get_pe_current_datetime()
+        certificate_date = datetime.now(tz=timezone('America/Lima'))
         values = {
             'record': reference_guide,
             'line_vals': [],
@@ -173,11 +171,14 @@ class AccountEdiFormat(models.Model):
             'Content-type': 'application/json',
         }
 
+        certificate = referral_guide.company_id.sudo().l10n_pe_edi_certificate_id
+        if not certificate:
+            return {'error': _("No valid certificate found for %s company.", referral_guide.company_id.display_name),
+                    'blocking_level': 'error'}
         edi_tree = fromstring(edi_str)
-        edi_tree = referral_guide.company_id.l10n_pe_edi_certificate_id.sudo()._sign_referral_guide_xml(edi_tree)
-        error = self.env['ir.attachment']._l10n_pe_edi_check_with_xsd(edi_tree, '09')
-        if error:
-            return {'error': _('XSD validation failed: %s', error), 'blocking_level': 'error'}
+        # Odoo 18: la firma se hace desde account.edi.format con certificate.certificate,
+        # y el núcleo ya no valida contra XSD (_l10n_pe_edi_check_with_xsd fue eliminado).
+        edi_tree = self._l10n_pe_sign_referral_guide(certificate, edi_tree)
         edi_str = etree.tostring(edi_tree, xml_declaration=True, encoding='UTF-8')
         zip_edi_str = self._l10n_pe_edi_zip_edi_document([('%s.xml' % edi_filename, edi_str)])
         hash_zip_edi_str = self._l10n_pe_edi_hash_sha256_edi_document(zip_edi_str)
@@ -229,11 +230,14 @@ class AccountEdiFormat(models.Model):
             "Content-type": "application/json",
         }
 
+        certificate = referral_guide.company_id.sudo().l10n_pe_edi_certificate_id
+        if not certificate:
+            return {"error": _("No valid certificate found for %s company.", referral_guide.company_id.display_name),
+                    "blocking_level": "error"}
         edi_tree = fromstring(edi_str)
-        edi_tree = referral_guide.company_id.l10n_pe_edi_certificate_id.sudo()._sign_referral_guide_xml(edi_tree)
-        error = self.env["ir.attachment"]._l10n_pe_edi_check_with_xsd(edi_tree, "09")
-        if error:
-            return {"error": _("XSD validation failed: %s", error), "blocking_level": "error"}
+        # Odoo 18: la firma se hace desde account.edi.format con certificate.certificate,
+        # y el núcleo ya no valida contra XSD (_l10n_pe_edi_check_with_xsd fue eliminado).
+        edi_tree = self._l10n_pe_sign_referral_guide(certificate, edi_tree)
 
         edi_str = etree.tostring(edi_tree, xml_declaration=True, encoding="UTF-8")
         zip_edi_str = self._l10n_pe_edi_zip_edi_document([(f"{edi_filename}.xml", edi_str)])

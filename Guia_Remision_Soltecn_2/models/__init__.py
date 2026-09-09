@@ -2,8 +2,7 @@ from . import stock_picking
 from . import account_edi_format
 from . import hr_employee
 from . import stock_picking_type
-from . import l10n_pe_edi_certificate
-from . import ir_attachment
+from . import account_edi_format_sign
 from . import res_partner
 from . import res_company
 from . import stock_move_line

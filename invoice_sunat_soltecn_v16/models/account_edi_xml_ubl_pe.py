@@ -11,22 +11,6 @@ class AccountEdiXmlUBLPE(models.AbstractModel):
     _inherit = 'account.edi.xml.ubl_pe'
 
     def _export_invoice_vals(self, invoice):
-
-        def grouping_key_generator(base_line, tax_values):
-            tax = tax_values['tax_repartition_line'].tax_id
-            tax_category_vals = self._get_tax_category_list(invoice, tax)[0]
-            grouping_key = {
-                'tax_category_id': tax_category_vals['id'],
-                'tax_category_percent': tax_category_vals['percent'],
-                '_tax_category_vals_': tax_category_vals,
-                'tax_amount_type': tax.amount_type,
-            }
-            # If the tax is fixed, we want to have one group per tax
-            # s.t. when the invoice is imported, we can try to guess the fixed taxes
-            if tax.amount_type == 'fixed':
-                grouping_key['tax_name'] = tax.name
-            return grouping_key
-
         # EXTENDS account.edi.xml.ubl_pe
         vals = super()._export_invoice_vals(invoice)
 
@@ -45,9 +29,10 @@ class AccountEdiXmlUBLPE(models.AbstractModel):
             vals['vals']['downpayments_vals'] = retention_vals
 
         taxes_vals = invoice._prepare_invoice_aggregated_taxes(
-            grouping_key_generator=grouping_key_generator,
+            grouping_key_generator=self._get_tax_grouping_key,
             filter_tax_values_to_apply=self._apply_invoice_tax_filter,
             filter_invl_to_apply=self._apply_invoice_line_filter,
+            round_from_tax_lines=True,
         )
 
         # Fixed Taxes: filter them on the document level, and adapt the totals
@@ -71,7 +56,7 @@ class AccountEdiXmlUBLPE(models.AbstractModel):
 
         for line_id, line in enumerate(invoice_lines):
             line_taxes_vals = taxes_vals['tax_details_per_record'][line]
-            line_vals = self._get_invoice_line_vals(line, line_id, line_taxes_vals)
+            line_vals = self._get_invoice_line_vals(line, line_id, {**line_taxes_vals, 'invoice_line': line})
             invoice_line_vals_list.append(line_vals)
 
         if downpayments_vals:
@@ -158,9 +143,9 @@ class AccountEdiXmlUBLPE(models.AbstractModel):
             'payable_amount': invoice.amount_total,
         }
     
-    def _get_invoice_line_vals(self, line, taxes_vals, idx=None):
+    def _get_invoice_line_vals(self, line, line_id, taxes_vals):
         # EXTENDS account.edi.xml.ubl_21
-        vals = super()._get_invoice_line_vals(line, taxes_vals, idx)
+        vals = super()._get_invoice_line_vals(line, line_id, taxes_vals)
         if line.tax_ids[0].l10n_pe_edi_tax_code == '9996' and line.discount == 100.00 and line.l10n_pe_edi_affectation_reason == '37':
             vals['line_extension_amount'] = line.quantity * line.price_unit
             vals['pricing_reference_vals']['alternative_condition_price_vals'][0]['price_amount'] = line.currency_id.round(line.price_unit)
@@ -220,7 +205,7 @@ class AccountEdiXmlUBLPE(models.AbstractModel):
         }
 
         for tax_detail_vals in taxes_vals['tax_details'].values():
-            tax = self.env['account.tax'].browse(tax_detail_vals['group_tax_details'][0]['id'])
+            tax = tax_detail_vals['taxes_data'][0]['tax']
             if tax_detail_vals['tax_amount_currency'] < 0 and line.move_id.l10n_pe_edi_legend == '1002':
                 continue
             vals['tax_subtotal_vals'].append({

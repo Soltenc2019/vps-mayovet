@@ -7,7 +7,7 @@
             <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
                 <cbc:DebitedQuantity
                         t-att-unitCode="line.product_uom_id.l10n_pe_edi_measure_unit_code"
-                        t-esc='line.quantity'/>
+                        t-out='line.quantity'/>
             </t>
         </xpath>
         <!-- BASE PE EDI-->
@@ -17,12 +17,12 @@
                 <t t-if="line.tax_ids[0].l10n_pe_edi_tax_code == '9996'">
                     <cbc:LineExtensionAmount
                                 t-att-currencyID="line.currency_id.name"
-                                t-esc="format_float(line.quantity * line_vals['price_total_unit'])"/>
+                                t-out="format_float(line.quantity * line_vals['price_total_unit'])"/>
                 </t>
                 <t t-else="">
                     <cbc:LineExtensionAmount
                                 t-att-currencyID="line.currency_id.name"
-                                t-esc="format_float(line.price_subtotal)"/>
+                                t-out="format_float(line.price_subtotal)"/>
                 </t>
             </t>
         </xpath>
@@ -31,12 +31,12 @@
                 <t t-if="line.tax_ids[0].l10n_pe_edi_tax_code == '9996'">
                     <cbc:TaxAmount
                                 t-att-currencyID="line.currency_id.name"
-                                t-esc="format_float(0)"/>
+                                t-out="format_float(0)"/>
                 </t>
                 <t t-else="">
                     <cbc:TaxAmount
                             t-att-currencyID="line.currency_id.name"
-                            t-esc="format_float(line.price_total - line.price_subtotal)"/>
+                            t-out="format_float(line.price_total - line.price_subtotal)"/>
                 </t>
             </t>
         </xpath>
@@ -45,12 +45,12 @@
                 <t t-if="line.tax_ids[0].l10n_pe_edi_tax_code == '9996'">
                     <cbc:Percent
                         t-if="tax.amount_type == 'percent'"
-                        t-esc="format_float(18)"/>
+                        t-out="format_float(18)"/>
                 </t>
                 <t t-else="">
                     <cbc:Percent
                         t-if="tax.amount_type == 'percent'"
-                        t-esc="tax.amount"/>
+                        t-out="tax.amount"/>
                 </t>
             </t>
         </xpath>
@@ -63,13 +63,13 @@
             <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
                 <cac:DiscrepancyResponse t-if="record.l10n_latam_document_type_id.code == '08'">
-                    <cbc:ResponseCode t-esc="record.l10n_pe_edi_charge_reason"/>
-                    <cbc:Description t-esc="record.ref"/>
+                    <cbc:ResponseCode t-out="record.l10n_pe_edi_charge_reason"/>
+                    <cbc:Description t-out="record.ref"/>
                 </cac:DiscrepancyResponse>
                 <cac:BillingReference>
                     <cac:InvoiceDocumentReference t-if="record.debit_origin_id">
-                        <cbc:ID t-esc="record.debit_origin_id.name.replace(' ', '')"/>
-                        <cbc:DocumentTypeCode t-esc="record.debit_origin_id.l10n_latam_document_type_id.code"/>
+                        <cbc:ID t-out="record.debit_origin_id.name.replace(' ', '')"/>
+                        <cbc:DocumentTypeCode t-out="record.debit_origin_id.l10n_latam_document_type_id.code"/>
                     </cac:InvoiceDocumentReference>
                 </cac:BillingReference>
             </t>
@@ -88,27 +88,27 @@
                         </t>
                         <cbc:LineExtensionAmount
                             t-att-currencyID="record.currency_id.name"
-                            t-esc="format_float(record.amount_untaxed + LineExtensionAmountDownpayment)"/>
+                            t-out="format_float(record.amount_untaxed + LineExtensionAmountDownpayment)"/>
                         <cbc:TaxInclusiveAmount
                             t-att-currencyID="record.currency_id.name"
-                            t-esc="format_float(record.amount_total + TaxInclusiveAmountDownpayment)"/>
-                        <cbc:PrepaidAmount t-att-currencyID="record.currency_id.name" t-esc="format_float(TaxInclusiveAmountDownpayment)"/>
+                            t-out="format_float(record.amount_total + TaxInclusiveAmountDownpayment)"/>
+                        <cbc:PrepaidAmount t-att-currencyID="record.currency_id.name" t-out="format_float(TaxInclusiveAmountDownpayment)"/>
                         <cbc:PayableAmount
                                 t-att-currencyID="record.currency_id.name"
-                                t-esc="format_float(record.amount_total)"/>
+                                t-out="format_float(record.amount_total)"/>
                     </t>
                     <!-- Anticipo /-->
                     <!-- BASE PE EDI -->
                     <t t-else="">
                         <cbc:LineExtensionAmount
                                 t-att-currencyID="record.currency_id.name"
-                                t-esc="format_float(record.amount_untaxed)"/>
+                                t-out="format_float(record.amount_untaxed)"/>
                         <cbc:TaxInclusiveAmount
                                 t-att-currencyID="record.currency_id.name"
-                                t-esc="format_float(record.amount_total)"/>
+                                t-out="format_float(record.amount_total)"/>
                         <cbc:PayableAmount
                                 t-att-currencyID="record.currency_id.name"
-                                t-esc="format_float(record.amount_total)"/>
+                                t-out="format_float(record.amount_total)"/>
                     </t>
                     <!-- BASE PE EDI -->
                 </cac:RequestedMonetaryTotal>
@@ -127,7 +127,7 @@
             <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
                 xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
                     <cac:AdditionalDocumentReference t-foreach="record.reference_downpayments_invoice" t-as="reference_downpayment_invoice">
-                        <cbc:ID t-esc="reference_downpayment_invoice.sequence_prefix + str(reference_downpayment_invoice.sequence_number)" />
+                        <cbc:ID t-out="reference_downpayment_invoice.sequence_prefix + str(reference_downpayment_invoice.sequence_number)" />
                         <t t-if="reference_downpayment_invoice.l10n_latam_document_type_id_code == '01'">
                             <cbc:DocumentTypeCode>02</cbc:DocumentTypeCode>
                         </t>
@@ -136,12 +136,12 @@
                                 <cbc:DocumentTypeCode>03</cbc:DocumentTypeCode>
                             </t>
                         </t>
-                        <cbc:DocumentStatusCode t-esc="reference_downpayment_invoice_index + 1"/>
+                        <cbc:DocumentStatusCode t-out="reference_downpayment_invoice_index + 1"/>
                         <cac:IssuerParty>
                             <cac:PartyIdentification>
                                 <cbc:ID 
                                 t-att-schemeID="record.company_id.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code"
-                                t-esc="record.company_id.partner_id.vat"/>
+                                t-out="record.company_id.partner_id.vat"/>
                             </cac:PartyIdentification>
                         </cac:IssuerParty>
                     </cac:AdditionalDocumentReference>
@@ -153,8 +153,8 @@
                 xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
                 <!-- Anticipo -->
                 <cac:PrepaidPayment t-foreach="record.reference_downpayments_invoice" t-as="downpayment">
-                    <cbc:ID t-esc="downpayment_index + 1"/>
-                    <cbc:PaidAmount  t-att-currencyID="downpayment.currency_id.name" t-esc="abs(downpayment.amount_total)"/>
+                    <cbc:ID t-out="downpayment_index + 1"/>
+                    <cbc:PaidAmount  t-att-currencyID="downpayment.currency_id.name" t-out="abs(downpayment.amount_total)"/>
                 </cac:PrepaidPayment>
                 <!-- Anticipo /-->
                 <!-- Retention -->
@@ -162,9 +162,9 @@
                     <cac:AllowanceCharge>
                         <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
                         <cbc:AllowanceChargeReasonCode>62</cbc:AllowanceChargeReasonCode>
-                        <cbc:MultiplierFactorNumeric t-esc="record.l10n_pe_edi_retention_type_id.rate / 100"/>
-                        <cbc:Amount t-att-currencyID="record.currency_id.name" t-esc="record.l10n_pe_edi_total_retention" />
-                        <cbc:BaseAmount t-att-currencyID="record.currency_id.name" t-esc="record.amount_total" />
+                        <cbc:MultiplierFactorNumeric t-out="record.l10n_pe_edi_retention_type_id.rate / 100"/>
+                        <cbc:Amount t-att-currencyID="record.currency_id.name" t-out="record.l10n_pe_edi_total_retention" />
+                        <cbc:BaseAmount t-att-currencyID="record.currency_id.name" t-out="record.amount_total" />
                     </cac:AllowanceCharge>
                 </t>
                 <!-- Retention /-->
@@ -177,8 +177,8 @@
                     <cac:AllowanceCharge>
                         <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
                         <cbc:AllowanceChargeReasonCode>04</cbc:AllowanceChargeReasonCode>
-                        <cbc:Amount t-att-currencyID="record.currency_id.name" t-esc="format_float(LineExtensionAmountDownpayment)" />
-                        <cbc:BaseAmount t-att-currencyID="record.currency_id.name" t-esc="format_float(LineExtensionAmountDownpayment * 2 + record.amount_untaxed)" />
+                        <cbc:Amount t-att-currencyID="record.currency_id.name" t-out="format_float(LineExtensionAmountDownpayment)" />
+                        <cbc:BaseAmount t-att-currencyID="record.currency_id.name" t-out="format_float(LineExtensionAmountDownpayment * 2 + record.amount_untaxed)" />
                     </cac:AllowanceCharge>
                 </t>
                 <!-- Anticipo /-->               

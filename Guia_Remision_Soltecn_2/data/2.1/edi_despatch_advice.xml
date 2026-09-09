@@ -11,41 +11,41 @@
             xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" 
             xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" 
             xmlns="urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2">
-                <cbc:ID t-esc="line['id']"/>
+                <cbc:ID t-out="line['id']"/>
                 <t t-if="record.transportation_reason in ('08','09') and not record.indicador_traslado_total_damods">
-                <cbc:DeliveredQuantity t-att-unitCode="line['product_uom_dam_ds']" t-esc="line['product_uom_qty']"/>
+                <cbc:DeliveredQuantity t-att-unitCode="line['product_uom_dam_ds']" t-out="line['product_uom_qty']"/>
                 </t>
                 <t t-else="">
-                <cbc:DeliveredQuantity t-att-unitCode="line['product_uom']" t-esc="line['product_uom_qty']"/>
+                <cbc:DeliveredQuantity t-att-unitCode="line['product_uom']" t-out="line['product_uom_qty']"/>
                 </t>
                 <cac:OrderLineReference>
-                    <cbc:LineID t-esc="line['id']"/>
+                    <cbc:LineID t-out="line['id']"/>
                 </cac:OrderLineReference>
                 <cac:Item>
-                    <cbc:Description t-esc="line['name']"/>
+                    <cbc:Description t-out="line['name']"/>
                     <cac:SellersItemIdentification>
-                        <cbc:ID t-esc="line['product_id']"/>
+                        <cbc:ID t-out="line['product_id']"/>
                     </cac:SellersItemIdentification>
                     <cac:AdditionalItemProperty t-if="line['unspsc_code_id'] and not record.indicador_traslado_total_damods">
                         <cbc:Name>Partida arancelaria</cbc:Name>
                         <cbc:NameCode listAgencyName="PE:SUNAT"
                             listName="Propiedad del item"
                             listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo55">7020</cbc:NameCode>
-                        <cbc:Value><t t-esc="line['unspsc_code_id']"/></cbc:Value>
+                        <cbc:Value><t t-out="line['unspsc_code_id']"/></cbc:Value>
                     </cac:AdditionalItemProperty>
                     <cac:AdditionalItemProperty t-if="line['damds_number'] and not record.indicador_traslado_total_damods">
                         <cbc:Name>Numeración de la DAM o DS</cbc:Name>
                         <cbc:NameCode listAgencyName="PE:SUNAT"
                             listName="Propiedad del item"
                             listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo55">7021</cbc:NameCode>
-                        <cbc:Value t-esc="line['damds_number']"/>
+                        <cbc:Value t-out="line['damds_number']"/>
                     </cac:AdditionalItemProperty>
                     <cac:AdditionalItemProperty t-if="line['damds_serie'] and not record.indicador_traslado_total_damods">
                         <cbc:Name>Número de serie en la DAM o DS</cbc:Name>
                         <cbc:NameCode listAgencyName="PE:SUNAT"
                             listName="Propiedad del item"
                             listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo55">7023</cbc:NameCode>
-                        <cbc:Value t-esc="line['damds_serie']"/>
+                        <cbc:Value t-out="line['damds_serie']"/>
                     </cac:AdditionalItemProperty>
                 </cac:Item>
         </t>
@@ -90,31 +90,31 @@
             </ext:UBLExtensions>
             <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
             <cbc:CustomizationID>2.0</cbc:CustomizationID>
-            <!-- <cbc:ID t-esc="record.serial_referral_guide.replace(' ', '')"/> -->
-            <cbc:ID t-esc="record.sequence_serial_guide[:4] + '-' + str(record.sequence_number_guide)"/>
-            <cbc:IssueDate t-esc="certificate_date"/>
-            <cbc:IssueTime t-esc="certificate_hour"/>
+            <!-- <cbc:ID t-out="record.serial_referral_guide.replace(' ', '')"/> -->
+            <cbc:ID t-out="record.sequence_serial_guide[:4] + '-' + str(record.sequence_number_guide)"/>
+            <cbc:IssueDate t-out="certificate_date"/>
+            <cbc:IssueTime t-out="certificate_hour"/>
             <!-- <cbc:IssueTime t-field="record.time_departure_date" t-field-options='{"format": "hh:mm:ss"}'/> -->
             <cbc:DespatchAdviceTypeCode
                 listAgencyName="PE:SUNAT"
                 listName="Tipo de Documento"
                 listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo01">09</cbc:DespatchAdviceTypeCode>
-            <cbc:Note t-if="record.comments" t-esc='record.comments[:250]'/>
+            <cbc:Note t-if="record.comments" t-out='record.comments[:250]'/>
             <t t-if="record.transportation_reason and record.related_document">
                 <t t-foreach="record.related_document" t-as="document">
                     <cac:AdditionalDocumentReference>
-                        <cbc:ID t-if="document.related_document_number"><t t-esc="document.related_document_number"/></cbc:ID>
+                        <cbc:ID t-if="document.related_document_number"><t t-out="document.related_document_number"/></cbc:ID>
                         <cbc:DocumentTypeCode
                             listAgencyName="PE:SUNAT"
                             listName="Documento relacionado al transporte"
-                            listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo61"><t t-esc="document.related_document_type"/></cbc:DocumentTypeCode>
-                        <cbc:DocumentType><t t-esc="dict(document.PE_RELATED_DOCUMENT)[document.related_document_type]"/></cbc:DocumentType>
+                            listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo61"><t t-out="document.related_document_type"/></cbc:DocumentTypeCode>
+                        <cbc:DocumentType><t t-out="dict(document.PE_RELATED_DOCUMENT)[document.related_document_type]"/></cbc:DocumentType>
                         <cac:IssuerParty t-if="document.related_document_type in ('01', '03', '04', '09', '12', '48')">
                             <cac:PartyIdentification>
                                 <cbc:ID t-att-schemeID="document.company_id.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code"
                                     schemeName="Documento de Identidad"
                                     schemeAgencyName="PE:SUNAT"
-                                    schemeURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo06"><t t-esc='document.company_id.vat'/></cbc:ID>
+                                    schemeURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo06"><t t-out='document.company_id.vat'/></cbc:ID>
                             </cac:PartyIdentification>       
                         </cac:IssuerParty>
                     </cac:AdditionalDocumentReference>
@@ -124,10 +124,10 @@
                 <cbc:ID>IDSignKG</cbc:ID>
                 <cac:SignatoryParty>
                     <cac:PartyIdentification>
-                        <cbc:ID t-att-schemeID="record.company_id.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code" t-esc="record.company_id.vat"/>
+                        <cbc:ID t-att-schemeID="record.company_id.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code" t-out="record.company_id.vat"/>
                     </cac:PartyIdentification>
                     <cac:PartyName>
-                        <cbc:Name t-esc="record.company_id.name.upper()"/>
+                        <cbc:Name t-out="record.company_id.name.upper()"/>
                     </cac:PartyName>
                 </cac:SignatoryParty>
                 <cac:DigitalSignatureAttachment>
@@ -137,83 +137,83 @@
                 </cac:DigitalSignatureAttachment>
             </cac:Signature>
             <cac:DespatchSupplierParty>
-                <!-- <cbc:CustomerAssignedAccountID t-att-schemeID="record.company_id.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code" t-esc="record.company_id.partner_id.vat"/> -->
+                <!-- <cbc:CustomerAssignedAccountID t-att-schemeID="record.company_id.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code" t-out="record.company_id.partner_id.vat"/> -->
                 <!-- <cbc:CustomerAssignedAccountID schemeID="6">20107301128</cbc:CustomerAssignedAccountID> -->
                 <cac:Party>
                     <cac:PartyIdentification>
-                        <cbc:ID t-att-schemeID="record.company_id.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code" t-esc="record.company_id.vat"/>
+                        <cbc:ID t-att-schemeID="record.company_id.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code" t-out="record.company_id.vat"/>
                     </cac:PartyIdentification>
                     <cac:PartyLegalEntity>
-                        <cbc:RegistrationName t-esc="record.company_id.partner_id.name"/>
+                        <cbc:RegistrationName t-out="record.company_id.partner_id.name"/>
                     </cac:PartyLegalEntity>
                 </cac:Party>
             </cac:DespatchSupplierParty>
             <cac:DeliveryCustomerParty>
-                <!-- <cbc:CustomerAssignedAccountID t-att-schemeID="record.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code" t-esc="record.partner_id.vat"/> -->
+                <!-- <cbc:CustomerAssignedAccountID t-att-schemeID="record.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code" t-out="record.partner_id.vat"/> -->
                 <cac:Party>
                     <cac:PartyIdentification>
-                        <cbc:ID t-att-schemeID="record.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code" t-esc="record.partner_id.vat"/>
+                        <cbc:ID t-att-schemeID="record.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code" t-out="record.partner_id.vat"/>
                     </cac:PartyIdentification>
                     <cac:PartyLegalEntity>
-                        <cbc:RegistrationName t-esc="record.partner_id.name"/>
+                        <cbc:RegistrationName t-out="record.partner_id.name"/>
                     </cac:PartyLegalEntity>
                 </cac:Party>
             </cac:DeliveryCustomerParty>
             <cac:Shipment>
                 <cbc:ID>1</cbc:ID>
-                <cbc:HandlingCode t-esc="record.transportation_reason"/>
+                <cbc:HandlingCode t-out="record.transportation_reason"/>
                 <cbc:HandlingInstructions t-if="record.transportation_reason == '13'" t-field="record.handling_instructions"/>
                 <!-- <cbc:Information/> -->
                 <t t-if="record.transportation_reason in ('08','09') and not record.indicador_traslado_total_damods">
-                    <cbc:NetWeightMeasure unitCode="KGM" t-esc="netWeightMeasure"/>
-                    <cbc:Information t-esc="record.net_weight_measure_information[:250]"/>
+                    <cbc:NetWeightMeasure unitCode="KGM" t-out="netWeightMeasure"/>
+                    <cbc:Information t-out="record.net_weight_measure_information[:250]"/>
                 </t>
-                <cbc:GrossWeightMeasure unitCode="KGM" t-esc="grossWeightMeasure"/>
+                <cbc:GrossWeightMeasure unitCode="KGM" t-out="grossWeightMeasure"/>
                 <t t-if="record.transportation_reason in ('08','09')">
-                    <cbc:TotalTransportHandlingUnitQuantity t-if="record.total_transport_handling_unit_quantity" t-esc="record.total_transport_handling_unit_quantity"/>
+                    <cbc:TotalTransportHandlingUnitQuantity t-if="record.total_transport_handling_unit_quantity" t-out="record.total_transport_handling_unit_quantity"/>
                     <cac:TransportHandlingUnit t-if="(record.first_package or record.second_package) and not record.total_transport_handling_unit_quantity">
                         <cac:Package t-if="record.first_package">
-                            <cbc:ID t-esc="record.first_package"/>
-                            <cbc:TraceID t-esc="record.first_package_trace"/>
+                            <cbc:ID t-out="record.first_package"/>
+                            <cbc:TraceID t-out="record.first_package_trace"/>
                         </cac:Package>
                         <cac:Package t-if="record.second_package">
-                            <cbc:ID t-esc="record.second_package"/>
-                            <cbc:TraceID t-esc="record.second_package_trace"/>
+                            <cbc:ID t-out="record.second_package"/>
+                            <cbc:TraceID t-out="record.second_package_trace"/>
                         </cac:Package>
                     </cac:TransportHandlingUnit>
                 </t>
                 <cbc:SpecialInstructions t-if="record.is_m1l">SUNAT_Envio_IndicadorTrasladoVehiculoM1L</cbc:SpecialInstructions>
                 <cbc:SpecialInstructions t-if="record.indicador_traslado_total_damods">SUNAT_Envio_IndicadorTrasladoTotalDAMoDS</cbc:SpecialInstructions>
                 <cac:ShipmentStage>
-                    <cbc:TransportModeCode t-esc="record.transport_type"/>
+                    <cbc:TransportModeCode t-out="record.transport_type"/>
                     <cac:TransitPeriod>
-                        <cbc:StartDate t-esc="record.departure_date"/>
+                        <cbc:StartDate t-out="record.departure_date"/>
                     </cac:TransitPeriod>
                     <cac:CarrierParty t-if="record.transport_type == '01' and not record.is_m1l">
                         <cac:PartyIdentification>
-                            <cbc:ID t-att-schemeID="record.employee_company.l10n_latam_identification_type_id.l10n_pe_vat_code" t-esc="record.employee_company.vat"/>
+                            <cbc:ID t-att-schemeID="record.employee_company.l10n_latam_identification_type_id.l10n_pe_vat_code" t-out="record.employee_company.vat"/>
                         </cac:PartyIdentification>
                         <cac:PartyLegalEntity>
-                            <cbc:RegistrationName t-esc="record.employee_company.name"/>
+                            <cbc:RegistrationName t-out="record.employee_company.name"/>
                         </cac:PartyLegalEntity>
                     </cac:CarrierParty>
                     <!-- <cac:TransportMeans>
                         <cac:RoadTransport>
-                            <cbc:LicensePlateID t-esc="record.vehicle_plate"/>
+                            <cbc:LicensePlateID t-out="record.vehicle_plate"/>
                         </cac:RoadTransport>
                     </cac:TransportMeans> -->
                     <cac:DriverPerson t-if="record.transport_type == '02' and not record.is_m1l">
-                        <cbc:ID schemeID="1"><t t-esc="record.identification_id"></t></cbc:ID>
-                        <cbc:FirstName><t t-esc="record.first_name"></t></cbc:FirstName>
-                        <cbc:FamilyName><t t-esc="record.family_name"></t></cbc:FamilyName>
+                        <cbc:ID schemeID="1"><t t-out="record.identification_id"></t></cbc:ID>
+                        <cbc:FirstName><t t-out="record.first_name"></t></cbc:FirstName>
+                        <cbc:FamilyName><t t-out="record.family_name"></t></cbc:FamilyName>
                         <cbc:JobTitle>Principal</cbc:JobTitle>
                         <cac:IdentityDocumentReference>
-                            <cbc:ID><t t-esc="record.driver_license"></t></cbc:ID>
+                            <cbc:ID><t t-out="record.driver_license"></t></cbc:ID>
                         </cac:IdentityDocumentReference>
                     </cac:DriverPerson>
                     <!--NEW-->
                     <cac:LoadingTransportEvent t-if="record.transport_type == '01'">
-                        <cbc:OccurrenceDate t-esc="record.merch_delivery_to_driver"/>
+                        <cbc:OccurrenceDate t-out="record.merch_delivery_to_driver"/>
                     </cac:LoadingTransportEvent>
                     <!--NEW-->
                 </cac:ShipmentStage>
@@ -222,27 +222,27 @@
                     <t t-if="record.transportation_reason in ('09')">
                     <cac:DeliveryAddress>
                         <t t-if="record.type_aero_port_location == '1'">
-                        <cbc:ID t-esc="record.port_locations.ubigeo"/>
+                        <cbc:ID t-out="record.port_locations.ubigeo"/>
                         <cac:AddressLine>
-                            <cbc:Line t-esc="record.port_locations.address"/>
+                            <cbc:Line t-out="record.port_locations.address"/>
                         </cac:AddressLine>
                         </t>
                         <t t-if="record.type_aero_port_location == '2'">
-                        <cbc:ID t-esc="record.aeroport_locations.ubigeo"/>
+                        <cbc:ID t-out="record.aeroport_locations.ubigeo"/>
                         <cac:AddressLine>
-                            <cbc:Line t-esc="record.aeroport_locations.address"/>
+                            <cbc:Line t-out="record.aeroport_locations.address"/>
                         </cac:AddressLine>
                         </t>
                     </cac:DeliveryAddress>
                     </t>
                     <t t-else="">
                     <cac:DeliveryAddress>
-                        <cbc:ID t-esc="record.destination_address.l10n_pe_district.code"/>
+                        <cbc:ID t-out="record.destination_address.l10n_pe_district.code"/>
                         <!-- NEW -->
-                        <cbc:AddressTypeCode t-if="record.transportation_reason == '04'" t-att-listID="record.destination_address.vat" t-esc="record.destination_address.property_code"/>
+                        <cbc:AddressTypeCode t-if="record.transportation_reason == '04'" t-att-listID="record.destination_address.vat" t-out="record.destination_address.property_code"/>
                         <!-- NEW -->
                         <cac:AddressLine>
-                            <cbc:Line t-esc="record.destination_address.contact_address"/>
+                            <cbc:Line t-out="record.destination_address.contact_address"/>
                         </cac:AddressLine>                     
                     </cac:DeliveryAddress>
                     </t>
@@ -250,15 +250,15 @@
                     <cac:Despatch>
                         <cac:DespatchAddress>
                             <t t-if="record.type_aero_port_location == '1'">
-                            <cbc:ID t-esc="record.port_locations.ubigeo"/>
+                            <cbc:ID t-out="record.port_locations.ubigeo"/>
                             <cac:AddressLine>
-                                <cbc:Line t-esc="record.port_locations.address"/>
+                                <cbc:Line t-out="record.port_locations.address"/>
                             </cac:AddressLine>
                             </t>
                             <t t-if="record.type_aero_port_location == '2'">
-                            <cbc:ID t-esc="record.aeroport_locations.ubigeo"/>
+                            <cbc:ID t-out="record.aeroport_locations.ubigeo"/>
                             <cac:AddressLine>
-                                <cbc:Line t-esc="record.aeroport_locations.address"/>
+                                <cbc:Line t-out="record.aeroport_locations.address"/>
                             </cac:AddressLine>
                             </t>
                         </cac:DespatchAddress>
@@ -267,12 +267,12 @@
                     <t t-else="">
                     <cac:Despatch>
                         <cac:DespatchAddress>
-                            <cbc:ID t-esc="record.starting_address.l10n_pe_district.code"/>
+                            <cbc:ID t-out="record.starting_address.l10n_pe_district.code"/>
                             <!-- NEW -->
-                            <cbc:AddressTypeCode t-if="record.transportation_reason == '04'" t-att-listID="record.starting_address.vat" t-esc="record.starting_address.property_code"/>
+                            <cbc:AddressTypeCode t-if="record.transportation_reason == '04'" t-att-listID="record.starting_address.vat" t-out="record.starting_address.property_code"/>
                             <!-- NEW -->
                             <cac:AddressLine>
-                                <cbc:Line t-esc="record.starting_address.contact_address"/>
+                                <cbc:Line t-out="record.starting_address.contact_address"/>
                             </cac:AddressLine>                            
                         </cac:DespatchAddress>
                     </cac:Despatch>
@@ -280,7 +280,7 @@
                 </cac:Delivery>
                 <cac:TransportHandlingUnit>
                     <cac:TransportEquipment t-if="(record.transport_type != '01' or record.is_m1l) and record.vehicle_plate_m1l != 'SMT'">
-                        <cbc:ID><t t-if="record.is_m1l" t-esc="record.vehicle_plate_m1l"/><t t-else="" t-esc="record.vehicle_plate"/></cbc:ID>
+                        <cbc:ID><t t-if="record.is_m1l" t-out="record.vehicle_plate_m1l"/><t t-else="" t-out="record.vehicle_plate"/></cbc:ID>
                     </cac:TransportEquipment>
                 </cac:TransportHandlingUnit>
                 <t t-if="record.transportation_reason in ('08','09')">
@@ -288,16 +288,16 @@
                     <t t-if="record.type_aero_port_location == '1'">
                     <cbc:ID schemeAgencyName="PE:SUNAT"
                             t-att-schemeName="type_aero_port_location"
-                            t-att-schemeURI="'urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo6' + str(int(record.type_aero_port_location)+1)" t-esc="record.port_locations.code" />
-                    <cbc:LocationTypeCode t-esc="record.type_aero_port_location" />
-                    <cbc:Name t-esc="record.port_locations.name" />
+                            t-att-schemeURI="'urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo6' + str(int(record.type_aero_port_location)+1)" t-out="record.port_locations.code" />
+                    <cbc:LocationTypeCode t-out="record.type_aero_port_location" />
+                    <cbc:Name t-out="record.port_locations.name" />
                     </t>
                     <t t-if="record.type_aero_port_location == '2'">
                     <cbc:ID schemeAgencyName="PE:SUNAT"
                             t-att-schemeName="type_aero_port_location"
-                            t-att-schemeURI="'urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo6' + str(int(record.type_aero_port_location)+2)" t-esc="record.aeroport_locations.code" />
-                    <cbc:LocationTypeCode t-esc="record.type_aero_port_location" />
-                    <cbc:Name t-esc="record.aeroport_locations.name" />
+                            t-att-schemeURI="'urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo6' + str(int(record.type_aero_port_location)+2)" t-out="record.aeroport_locations.code" />
+                    <cbc:LocationTypeCode t-out="record.type_aero_port_location" />
+                    <cbc:Name t-out="record.aeroport_locations.name" />
                     </t>
                 </cac:FirstArrivalPortLocation>
                 </t>

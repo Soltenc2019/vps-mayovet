@@ -2,16 +2,12 @@ import base64
 import zipfile
 import io
 from requests.exceptions import ConnectionError, HTTPError, InvalidSchema, InvalidURL, ReadTimeout
-from zeep.wsse.username import UsernameToken
-from zeep import Client, Settings
-from zeep.exceptions import Fault
-from zeep.transports import Transport
 from lxml import etree
 from lxml import objectify
 from lxml.objectify import fromstring
 from copy import deepcopy
 from datetime import date, datetime
-from odoo import models, fields, api, _, _lt
+from odoo import models, fields, api, _
 from odoo.addons.iap.tools.iap_tools import iap_jsonrpc
 from odoo.exceptions import AccessError
 from odoo.tools import html_escape
@@ -66,11 +62,14 @@ class AccountEdiFormat(models.Model):
 
         edi_str = self._generate_edi_invoice_bstr(invoice)
 
+        certificate = invoice.company_id.sudo().l10n_pe_edi_certificate_id
+        if not certificate:
+            return {'error': _("No valid certificate found for %s company.", invoice.company_id.display_name),
+                    'blocking_level': 'error'}
         edi_tree = objectify.fromstring(edi_str)
-        edi_tree = invoice.company_id.l10n_pe_edi_certificate_id.sudo()._sign(edi_tree)
-        error = self.env['ir.attachment']._l10n_pe_edi_check_with_xsd(edi_tree, invoice.l10n_latam_document_type_id.code)
-        if error:
-            return {'error': _('XSD validation failed: %s', error), 'blocking_level': 'error'}
+        # Odoo 18: la firma pasó a account.edi.format._l10n_pe_sign() sobre
+        # certificate.certificate, y el núcleo ya no valida contra XSD.
+        edi_tree = self._l10n_pe_sign(certificate, edi_tree)
         edi_str = etree.tostring(edi_tree, xml_declaration=True, encoding='ISO-8859-1')
 
         cdr_res = self._process_cdr_status_web_services(invoice.company_id, invoice.sequence_prefix[:-1], invoice.sequence_number, invoice.l10n_latam_document_type_id.code)

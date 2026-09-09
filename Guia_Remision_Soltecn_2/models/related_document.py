@@ -1,5 +1,4 @@
 from odoo import models, fields, api
-from odoo.osv import expression
 
 class RelatedDocument(models.Model):
     _name = 'related.document'

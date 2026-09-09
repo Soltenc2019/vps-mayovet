@@ -1,6 +1,6 @@
 {
     'name': 'Report Customization',
-    'version': '17.0',
+    'version': '18.0',
     'summary': 'Report Customization Soltecn V16',
     'category': '',
     'author': 'Soltecn',
@@ -8,7 +8,6 @@
     'company': 'Soltecn',
     'website': 'https://www.Soltecn.com',
     'depends': ['invoice_sunat_soltecn_v16','Guia_Remision_Soltecn_2','base'],
-    'qweb': [],
     'data': [
         'views/res_company_view.xml',
         'views/report_templates.xml',

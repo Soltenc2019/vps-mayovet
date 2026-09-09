@@ -61,13 +61,13 @@
                                         <div class="border border-dark rounded mb-3 text-center">
                                                 <div class="p-2">
                                                     <h5>
-                                                        <span class="font-weight-bold">RUC <t t-esc="o.company_id.vat"/></span>
+                                                        <span class="font-weight-bold">RUC <t t-out="o.company_id.vat"/></span>
                                                     </h5>
                                                     <h5>
-                                                        <span class="font-weight-bold text-uppercase"><t t-esc="o.l10n_latam_document_type_id and o.l10n_latam_document_type_id.report_name or ''"/></span>
+                                                        <span class="font-weight-bold text-uppercase"><t t-out="o.l10n_latam_document_type_id and o.l10n_latam_document_type_id.report_name or ''"/></span>
                                                     </h5>
                                                     <h5>
-                                                        <span class="font-weight-bold" t-esc="o.name or ''"/>
+                                                        <span class="font-weight-bold" t-out="o.name or ''"/>
                                                     </h5>
                                                 </div>
                                         </div>
@@ -87,7 +87,7 @@
                     <div class="pt-7">
                         <t t-call="web.address_layout"/>
                     </div>
-                    <t t-raw="0"/>
+                    <t t-out="0"/>
                 </div>
             </xpath>-->
             <!--<xpath expr="//div[@t-attf-class=&#34;article o_report_layout_boxed o_company_#{company.id}_layout {{  'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}&#34;]" position="replace">

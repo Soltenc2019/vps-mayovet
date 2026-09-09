@@ -5,14 +5,11 @@ import base64
 import zipfile
 import io
 from requests.exceptions import ConnectionError as ReqConnectionError, HTTPError, InvalidSchema, InvalidURL, ReadTimeout
-from zeep.wsse.username import UsernameToken
-from zeep import Client, Settings
-from zeep.transports import Transport
 from lxml import etree
 from lxml import objectify
 from copy import deepcopy
 
-from odoo import models, api, _, _lt
+from odoo import models, api, _
 from odoo.addons.iap.tools.iap_tools import iap_jsonrpc
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import float_round, html_escape

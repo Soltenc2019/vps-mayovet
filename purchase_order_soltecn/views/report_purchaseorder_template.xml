@@ -10,7 +10,7 @@
                     </span>
                 </div>
                 <div>
-                    <span class="text-wrap" t-esc="o.notes"/>
+                    <span class="text-wrap" t-out="o.notes"/>
                 </div>
             </div>
         </xpath>

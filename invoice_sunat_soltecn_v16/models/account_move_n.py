@@ -142,6 +142,7 @@ class AccountMoveLine(models.Model):
 
     #OVERRIDE
     def _l10n_pe_edi_get_spot(self):
+        self.ensure_one()
         max_percent = max(self.invoice_line_ids.mapped('product_id.l10n_pe_withhold_percentage'), default=0)
         if not max_percent or not self.l10n_pe_edi_operation_type in ['1001', '1002', '1003', '1004'] or self.move_type == 'out_refund':
             return {}
@@ -158,14 +159,21 @@ class AccountMoveLine(models.Model):
         # just take the first one (but not meant to have multiple)
         national_bank_account_number = national_bank_account[0].acc_number if national_bank_account else False
 
+        # Odoo 18 añadió 'currency' y 'has_installments' al dict (los consume
+        # l10n_pe_edi/views/report_invoice.xml) y eliminó 'spot_message'.
+        # Se devuelven ambos conjuntos de claves para no romper ninguno.
+        has_installments = len(self.line_ids.filtered(lambda l: l.display_type == 'payment_term')) > 1
+
         return {
             'id': 'Detraccion',
+            'currency': self.company_id.currency_id,
             'payment_means_id': line.product_id.l10n_pe_withhold_code,
             'payee_financial_account': national_bank_account_number,
             'payment_means_code': '999',
             'spot_amount': self.amount_total * (max_percent/100.0),
             'amount': float_round(self.amount_total_signed * (max_percent/100.0), precision_rounding=2),
             'payment_percent': max_percent,
+            'has_installments': has_installments,
             'spot_message': "Operación sujeta al sistema de Pago de Obligaciones Tributarias-SPOT, Banco de la Nacion %s%% Cod Serv. %s" % (
                 line.product_id.l10n_pe_withhold_percentage, line.product_id.l10n_pe_withhold_code) if self.amount_total_signed >= 700.0 else False
         }

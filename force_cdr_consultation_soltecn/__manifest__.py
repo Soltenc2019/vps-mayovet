@@ -1,6 +1,6 @@
 {
     'name': 'Force CDR Consultation',
-    'version': '17.0.0.0.0',
+    'version': '18.0.0.0.0',
     'summary': 'Force CDR Consultation Soltecn',
     'category': '',
     'author': 'Solyman',
@@ -14,9 +14,6 @@
         # 'crm'
         # "point_of_sale"
         ],
-    'qweb': [
-        # 'static/src/xml/pos.xml'
-    ],
     'data': [
         # 'views/crm_lead_view.xml',
         'views/account_move_views.xml',

@@ -30,14 +30,14 @@
                             t-value="downpayments_vals.get('aditional_document_vals', False)"
                         />
                         <cac:AdditionalDocumentReference t-foreach="aditional_document_vals" t-as="downpayment">
-                            <cbc:ID t-esc="downpayment.get('id')" />
-                            <cbc:DocumentTypeCode t-esc="downpayment.get('document_type')"/>
-                            <cbc:DocumentStatusCode t-esc="downpayment.get('index')"/>
+                            <cbc:ID t-out="downpayment.get('id')" />
+                            <cbc:DocumentTypeCode t-out="downpayment.get('document_type')"/>
+                            <cbc:DocumentStatusCode t-out="downpayment.get('index')"/>
                             <cac:IssuerParty>
                                 <cac:PartyIdentification>
                                     <cbc:ID 
                                         t-att-schemeID="downpayment.get('party_identification_code')"
-                                        t-esc="downpayment.get('party_identification_vat')"
+                                        t-out="downpayment.get('party_identification_vat')"
                                     />
                                 </cac:PartyIdentification>
                             </cac:IssuerParty>
@@ -56,10 +56,10 @@
                 <t t-if="downpayments_vals">
                     <t t-set="prepaid_payment_vals" t-value="downpayments_vals.get('prepaid_payment_vals', False)"/>
                     <cac:PrepaidPayment t-foreach="prepaid_payment_vals" t-as="downpayment">
-                        <cbc:ID t-esc="downpayment.get('index')"/>
+                        <cbc:ID t-out="downpayment.get('index')"/>
                         <cbc:PaidAmount  
                             t-att-currencyID="downpayment.get('currency_name')" 
-                            t-esc="downpayment.get('amount_total')"
+                            t-out="downpayment.get('amount_total')"
                         />
                     </cac:PrepaidPayment>
                 </t>
@@ -94,8 +94,8 @@
                         <cbc:ChargeIndicator t-out="downpayments_vals.get('charge_indicator')"/>
                         <cbc:AllowanceChargeReasonCode
                             t-out="downpayments_vals.get('allowance_charge_reason_code')"/>
-                        <!-- <cbc:Amount t-att-currencyID="record.currency_id.name" t-esc="format_float(LineExtensionAmountDownpayment)" />
-                        <cbc:BaseAmount t-att-currencyID="record.currency_id.name" t-esc="format_float(LineExtensionAmountDownpayment * 2 + record.amount_untaxed)" /> -->
+                        <!-- <cbc:Amount t-att-currencyID="record.currency_id.name" t-out="format_float(LineExtensionAmountDownpayment)" />
+                        <cbc:BaseAmount t-att-currencyID="record.currency_id.name" t-out="format_float(LineExtensionAmountDownpayment * 2 + record.amount_untaxed)" /> -->
                         <cbc:Amount
                             t-att-currencyID="downpayments_vals.get('currency_name')"
                             t-out="format_float(downpayments_vals.get('amount'), downpayments_vals.get('currency_dp'))"/>
@@ -139,14 +139,14 @@
                             t-value="downpayments_vals.get('aditional_document_vals', False)"
                         />
                         <cac:AdditionalDocumentReference t-foreach="aditional_document_vals" t-as="downpayment">
-                            <cbc:ID t-esc="downpayment.get('id')" />
-                            <cbc:DocumentTypeCode t-esc="downpayment.get('document_type')"/>
-                            <cbc:DocumentStatusCode t-esc="downpayment.get('index')"/>
+                            <cbc:ID t-out="downpayment.get('id')" />
+                            <cbc:DocumentTypeCode t-out="downpayment.get('document_type')"/>
+                            <cbc:DocumentStatusCode t-out="downpayment.get('index')"/>
                             <cac:IssuerParty>
                                 <cac:PartyIdentification>
                                     <cbc:ID 
                                         t-att-schemeID="downpayment.get('party_identification_code')"
-                                        t-esc="downpayment.get('party_identification_vat')"
+                                        t-out="downpayment.get('party_identification_vat')"
                                     />
                                 </cac:PartyIdentification>
                             </cac:IssuerParty>
@@ -165,10 +165,10 @@
                 <t t-if="downpayments_vals">
                     <t t-set="prepaid_payment_vals" t-value="downpayments_vals.get('prepaid_payment_vals', False)"/>
                     <cac:PrepaidPayment t-foreach="prepaid_payment_vals" t-as="downpayment">
-                        <cbc:ID t-esc="downpayment.get('index')"/>
+                        <cbc:ID t-out="downpayment.get('index')"/>
                         <cbc:PaidAmount  
                             t-att-currencyID="downpayment.get('currency_name')" 
-                            t-esc="downpayment.get('amount_total')"
+                            t-out="downpayment.get('amount_total')"
                         />
                     </cac:PrepaidPayment>
                 </t>
@@ -203,8 +203,8 @@
                         <cbc:ChargeIndicator t-out="downpayments_vals.get('charge_indicator')"/>
                         <cbc:AllowanceChargeReasonCode
                             t-out="downpayments_vals.get('allowance_charge_reason_code')"/>
-                        <!-- <cbc:Amount t-att-currencyID="record.currency_id.name" t-esc="format_float(LineExtensionAmountDownpayment)" />
-                        <cbc:BaseAmount t-att-currencyID="record.currency_id.name" t-esc="format_float(LineExtensionAmountDownpayment * 2 + record.amount_untaxed)" /> -->
+                        <!-- <cbc:Amount t-att-currencyID="record.currency_id.name" t-out="format_float(LineExtensionAmountDownpayment)" />
+                        <cbc:BaseAmount t-att-currencyID="record.currency_id.name" t-out="format_float(LineExtensionAmountDownpayment * 2 + record.amount_untaxed)" /> -->
                         <cbc:Amount
                             t-att-currencyID="downpayments_vals.get('currency_name')"
                             t-out="format_float(downpayments_vals.get('amount'), downpayments_vals.get('currency_dp'))"/>
@@ -248,14 +248,14 @@
                             t-value="downpayments_vals.get('aditional_document_vals', False)"
                         />
                         <cac:AdditionalDocumentReference t-foreach="aditional_document_vals" t-as="downpayment">
-                            <cbc:ID t-esc="downpayment.get('id')" />
-                            <cbc:DocumentTypeCode t-esc="downpayment.get('document_type')"/>
-                            <cbc:DocumentStatusCode t-esc="downpayment.get('index')"/>
+                            <cbc:ID t-out="downpayment.get('id')" />
+                            <cbc:DocumentTypeCode t-out="downpayment.get('document_type')"/>
+                            <cbc:DocumentStatusCode t-out="downpayment.get('index')"/>
                             <cac:IssuerParty>
                                 <cac:PartyIdentification>
                                     <cbc:ID 
                                         t-att-schemeID="downpayment.get('party_identification_code')"
-                                        t-esc="downpayment.get('party_identification_vat')"
+                                        t-out="downpayment.get('party_identification_vat')"
                                     />
                                 </cac:PartyIdentification>
                             </cac:IssuerParty>
@@ -274,10 +274,10 @@
                 <t t-if="downpayments_vals">
                     <t t-set="prepaid_payment_vals" t-value="downpayments_vals.get('prepaid_payment_vals', False)"/>
                     <cac:PrepaidPayment t-foreach="prepaid_payment_vals" t-as="downpayment">
-                        <cbc:ID t-esc="downpayment.get('index')"/>
+                        <cbc:ID t-out="downpayment.get('index')"/>
                         <cbc:PaidAmount  
                             t-att-currencyID="downpayment.get('currency_name')" 
-                            t-esc="downpayment.get('amount_total')"
+                            t-out="downpayment.get('amount_total')"
                         />
                     </cac:PrepaidPayment>
                 </t>
@@ -312,8 +312,8 @@
                         <cbc:ChargeIndicator t-out="downpayments_vals.get('charge_indicator')"/>
                         <cbc:AllowanceChargeReasonCode
                             t-out="downpayments_vals.get('allowance_charge_reason_code')"/>
-                        <!-- <cbc:Amount t-att-currencyID="record.currency_id.name" t-esc="format_float(LineExtensionAmountDownpayment)" />
-                        <cbc:BaseAmount t-att-currencyID="record.currency_id.name" t-esc="format_float(LineExtensionAmountDownpayment * 2 + record.amount_untaxed)" /> -->
+                        <!-- <cbc:Amount t-att-currencyID="record.currency_id.name" t-out="format_float(LineExtensionAmountDownpayment)" />
+                        <cbc:BaseAmount t-att-currencyID="record.currency_id.name" t-out="format_float(LineExtensionAmountDownpayment * 2 + record.amount_untaxed)" /> -->
                         <cbc:Amount
                             t-att-currencyID="downpayments_vals.get('currency_name')"
                             t-out="format_float(downpayments_vals.get('amount'), downpayments_vals.get('currency_dp'))"/>

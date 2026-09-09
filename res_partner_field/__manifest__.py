@@ -1,6 +1,6 @@
 {
     'name': 'Res Partner Field',
-    'version': '17.0',
+    'version': '18.0',
     'summary': 'Custom res partner field',
     'category': 'Invoice',
     'author': 'Soltecn',
@@ -8,7 +8,6 @@
     'company': 'Soltecn',
     'website': 'https://www.Soltecn.com',
     'depends': ['base','sale','sale_margin'],
-    'qweb': [],
     'data': [
         'views/res_partner_views.xml'
         ],

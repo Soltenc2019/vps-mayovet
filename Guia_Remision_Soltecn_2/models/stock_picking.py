@@ -22,7 +22,7 @@ class AccountMove(models.Model):
     is_m1l = fields.Boolean(string="Es M1 o L", store=True)
     vehicle_plate_m1l = fields.Char(string='Placa vehículo M1 o L', store=True, help="Si el traslado se realiza sin un medio de trasporte M1 o L, sino por una persona, digitar 'SMT' (Sin medio de transporte)")
 
-    departure_date  = fields.Date('Fecha salida', copy=False, store=True, readonly=False,help="Fecha de salida", default= datetime.today())
+    departure_date  = fields.Date('Fecha salida', copy=False, store=True, readonly=False, help="Fecha de salida", default=fields.Date.context_today)
     arrival_date  = fields.Date('Fecha llegada', copy=False, store=True, readonly=False,help="Fecha de llegada")
 
     #? NUEVO CAMPO SUNAT 01/06/2026
@@ -65,14 +65,10 @@ class AccountMove(models.Model):
     def _default_edi_format_id(self):
         return self.env['account.edi.format'].search([('name','=','Peru UBL 2.1')], limit=1).id
     
-    def name_get(self):
-        res = []
+    @api.depends('name', 'serial_referral_guide')
+    def _compute_display_name(self):
         for move in self:
-            name = move.name
-            if move.serial_referral_guide:
-                name = "%s" % (move.serial_referral_guide)
-            res.append((move.id, name))
-        return res
+            move.display_name = move.serial_referral_guide or move.name
 
     edi_format_id = fields.Many2one('account.edi.format', required=True, default=_default_edi_format_id)
     origin_invoice = fields.Many2one('account.move',string='Factura origen',compute='_compute_origin_invoice', readonly=True, store=True, copy=False)
@@ -200,10 +196,10 @@ class AccountMove(models.Model):
             record.edi_state = 'not_enough'
             enough_information = False
             if record.departure_date and record.arrival_date and record.transportation_reason and record.state == "done" and record.transport_type:
-                if record.transportation_reason not in ('08') and not record.starting_address:
-                    return
-                if record.transportation_reason not in ('09') and not record.destination_address:
-                    return
+                if record.transportation_reason != '08' and not record.starting_address:
+                    continue
+                if record.transportation_reason != '09' and not record.destination_address:
+                    continue
                 if record.is_m1l:
                     enough_information = True
                 else:
@@ -220,16 +216,16 @@ class AccountMove(models.Model):
                 else:
                     raise ValidationError("Se requiere la especificación de serie en "+record.picking_type_id.warehouse_id.name)
 
-    @api.model
-    def create(self, vals):
-        res = super(AccountMove, self).create(vals)
-        for record in self:
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        for record in res:
             # NEW
             if record.edi_state == 'to_send':
                 record.verify_values_before_send()
             # NEW
             if not record.serial_referral_guide and record.edi_state == 'to_send':
-                sequence = self.picking_type_id.custom_sequence_id
+                sequence = record.picking_type_id.custom_sequence_id
                 number_asigned = sequence.number_next_actual
                 serial_referral_guide = sequence.next_by_id()
                 if serial_referral_guide:
@@ -240,7 +236,7 @@ class AccountMove(models.Model):
         return res
     
     def write(self, vals):
-        res = super(AccountMove, self).write(vals)
+        res = super().write(vals)
         for record in self:
             # NEW
             if record.edi_state == 'to_send':
@@ -296,7 +292,7 @@ class AccountMove(models.Model):
             if not self.specify_weight and not self.gross_weight_measure and self.edi_state == 'to_send':
                 raise ValidationError("Es necesario ingresar el peso bruto total de la carga.")
             stock.departure_date = datetime.today()
-        return super(AccountMove, self).button_validate()
+        return super().button_validate()
             
     def verify_values_before_send(self):
         document_types_validation_return = self.document_types_validation()

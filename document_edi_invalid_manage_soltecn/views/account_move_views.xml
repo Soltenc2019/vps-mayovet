@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='edi_error_count']" position="after">
                     <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
-                        invisible = "edi_error_count == '0' and edi_blocking_level != 'invalid'">
+                        invisible="edi_error_count == 0 or edi_blocking_level != 'invalid'">
                         <!-- attrs="{'invisible': ['|', ('edi_error_count', '=', 0), ('edi_blocking_level', '!=', 'invalid')]}"> -->
                         <div class="o_row">
                             <field name="edi_error_message" />

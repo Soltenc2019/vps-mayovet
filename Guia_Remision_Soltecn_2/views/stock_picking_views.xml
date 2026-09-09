@@ -20,7 +20,7 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.vpicktree"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="inside">
+            <xpath expr="//list" position="inside">
                 <field name="serial_referral_guide" optional="show"/>
                 <field name="edi_state" widget="badge" decoration-success="edi_state == 'sent'" decoration-info="edi_state in ('to_send', 'to_cancel')" decoration-danger="edi_state in ('cancelled', 'cancelled')"  string="Estado guía remisión" optional="show"/>
             </xpath>

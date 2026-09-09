@@ -68,8 +68,8 @@
                                 <field name="type_aero_port_location" string="Tipo locación destino" invisible="transportation_reason != '09'"/>
                                 <field name="port_locations" string="Puerto destino" invisible="transportation_reason != '09' or type_aero_port_location != '1'" required="transportation_reason == '09' or type_aero_port_location == '1'"/>
                                 <field name="aeroport_locations" string="Aeropuerto destino" invisible="transportation_reason != '09' or type_aero_port_location != '2'" required="transportation_reason == '09' or type_aero_port_location == '2'"/>
-                                <field name="departure_date" eval="DateTime.today()" readonly="edi_state == 'cdr_aceptado'"/>
-                                <field name="arrival_date" eval="DateTime.today()" readonly="edi_state == 'cdr_aceptado'"/>
+                                <field name="departure_date" readonly="edi_state == 'cdr_aceptado'"/>
+                                <field name="arrival_date" readonly="edi_state == 'cdr_aceptado'"/>
                                 <field name="sale_id" invisible="1"/>
                                 <field name="total_transport_handling_unit_quantity" required="transportation_reason in ('08','09')"/>
                                 <field name="gross_weight_measure" readonly="edi_state == 'cdr_aceptado' or specify_weight == True" required="state == 'done' or specify_weight == True or transportation_reason != False"/>
@@ -98,10 +98,10 @@
                     </page>                   
                     <page string="Documentos relacionados" name="related_documents" invisible="picking_type_code != 'outgoing' or picking_type_use_referrer_guide == False or transportation_reason not in ('08','09')">
                         <field name="related_document" required="transportation_reason in ('08','09')">
-                            <tree editable="bottom" string="Documentos">
+                            <list editable="bottom" string="Documentos">
                                 <field name="related_document_type"/>
                                 <field name="related_document_number"/>
-                            </tree>
+                            </list>
                         </field>
                     </page>
                 </xpath>

@@ -1,6 +1,6 @@
 {
     'name': 'Stock Report Customization',
-    'version': '17.0',
+    'version': '18.0',
     'summary': 'Stock Report Customization Solyman V17',
     'category': '',
     'author': 'Soltecn',
@@ -8,7 +8,6 @@
     'company': 'Soltecn',
     'website': 'https://www.Soltecn.com',
     'depends': ['stock'],
-    'qweb': [],
     'data': [
         'views/product_views.xml',
     ],

@@ -5,14 +5,14 @@
 		<field name="name">Catalogo 64 - Principales puertos en el Perú</field>
 		<field name="model">catalog.64</field>
 		<field name="arch" type="xml">
-			<tree string="Principales puertos en el Perú">
+			<list string="Principales puertos en el Perú">
 				<field name="code"/>
 				<field name="name"/>
                 <field name="ubigeo"/>
                 <field name="address"/>
                 <field name="type_aeroport"/>
 				<field name="active"/>
-			</tree>
+			</list>
 		</field>
 	</record>
 	<record id="view_catalog_64_form" model="ir.ui.view">
@@ -41,20 +41,20 @@
 	<record model="ir.actions.act_window" id="catalog_64_action">
 		<field name="name">Catalogo 64 - Principales puertos en el Perú</field>
 		<field name="res_model">catalog.64</field>
-		<field name="view_mode">tree,form</field>
+		<field name="view_mode">list,form</field>
 	</record>
     
 	<record id="view_catalog_63_tree" model="ir.ui.view">
 		<field name="name">Catalogo 63 - Principales aeropuertos en el Perú</field>
 		<field name="model">catalog.63</field>
 		<field name="arch" type="xml">
-			<tree string="Principales aeropuertos en el Perú">
+			<list string="Principales aeropuertos en el Perú">
 				<field name="code"/>
 				<field name="name"/>
                 <field name="ubigeo"/>
                 <field name="address"/>
 				<field name="active"/>
-			</tree>
+			</list>
 		</field>
 	</record>
 	<record id="view_catalog_63_form" model="ir.ui.view">
@@ -82,7 +82,7 @@
 	<record model="ir.actions.act_window" id="catalog_63_action">
 		<field name="name">Catalogo 63 - Principales aeropuertos en el Perú</field>
 		<field name="res_model">catalog.63</field>
-		<field name="view_mode">tree,form</field>
+		<field name="view_mode">list,form</field>
 	</record>
 	<menuitem name="Catalogos puerto y aeropuertos" id="catalog_64_configuration_menu" parent="account.menu_finance_configuration" sequence="23">
         <menuitem name="Catalog 63 - Principales puertos en el Perú" id="l10n_pe_edi_catalog_63_menu" action="catalog_63_action" sequence="23"/>

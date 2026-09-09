@@ -1,6 +1,6 @@
 {
     'name': 'Document edi invalid manage Soltecn',
-    'version': '17.0.0.0.0',
+    'version': '18.0.0.0.0',
     'summary': 'Document edi invalid manage',
     'category': 'Invoice',
     'author': 'Solyman',
@@ -12,7 +12,6 @@
         'account_edi',
         'l10n_pe_edi',
         ],
-    'qweb': [],
     'data': [
         # 'security/ir.model.access.csv',
         'views/account_move_views.xml',

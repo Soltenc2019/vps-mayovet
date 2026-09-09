@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="account_edi.view_move_form_inherit" />
             <field name="arch" type="xml">
                 <xpath expr="//page[@id='edi_documents']" position="after">
-                    <page id="edi_documents_soltecn "
+                    <page id="edi_documents_soltecn" name="page_edi_documents_soltecn"
                           string="EDI">
                         <button name="check_document_pe_edi_soltecn" type="object" class="oe_link" string="Verificar estado" />
                     </page>

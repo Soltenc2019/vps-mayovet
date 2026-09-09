@@ -1,5 +1,4 @@
 from odoo import models, fields, api
-from odoo.osv import expression
 
 class StockGroupPicking(models.Model):
     _name = 'stock.group.picking'
@@ -7,20 +6,16 @@ class StockGroupPicking(models.Model):
 
     stock_picking = fields.Many2one('stock.picking', string='Stock picking', index=True, required=True, readonly=True, auto_join=True, ondelete="cascade", check_company=True)
     name = fields.Char(string="Descripción", compute="_compute_group_data", store=True)
-    product_id = fields.Many2one('product.product', string='Agrupado en', domain=[('detailed_type', '=', 'consu')])
+    product_id = fields.Many2one('product.product', string='Agrupado en', domain=[('type', '=', 'consu'), ('is_storable', '=', False)])
     group_uom = fields.Many2one('uom.uom', "Unidad Medida", compute="_compute_group_data", store=True)
     quantity = fields.Float(string="Cantidad", default=1)
     weight_group = fields.Float(string="Peso grupo", compute="_compute_weight_group", store=True)
     # NEW
 
-    def name_get(self):
-        res = []
-        index = 1
-        for group in self:
-            name = "("+str(index)+") "+ group.name
-            res.append((group.id, name))
-            index += 1 
-        return res
+    @api.depends('name')
+    def _compute_display_name(self):
+        for index, group in enumerate(self, start=1):
+            group.display_name = "(%s) %s" % (index, group.name or '')
 
     @api.depends('stock_picking', 'stock_picking.move_ids_without_package', 'stock_picking.move_ids_without_package.product_id', 'stock_picking.move_ids_without_package.stock_group_paleta_bulto')
     def _compute_weight_group(self):

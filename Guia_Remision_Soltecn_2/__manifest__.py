@@ -1,6 +1,6 @@
 {
     'name': 'Guía remisión Solyman',
-    'version': '17.0.0.0',
+    'version': '18.0.0.0',
     'summary': 'Guía remisión Perú-Solyman',
     'category': '',
     'author': 'Solyman',
@@ -8,7 +8,6 @@
     'company': 'Solyman',
     'website': 'https://solymanconsulting.com/',
     'depends': ['base','sale','stock','hr','l10n_pe_edi','web','product_unspsc','uom'],
-    'qweb': [],
     # 'pre_init_hook': 'pre_init_hook',
     'data': [
         'security/ir.model.access.csv',

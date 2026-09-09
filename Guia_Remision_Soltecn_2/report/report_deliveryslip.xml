@@ -6,21 +6,21 @@
                 <div class="col-12">
                     <div class="row border border-bottom-0 border-dark">
                         <div class="col-1 border-end border-dark pt-1 ps-1 pb-1 text-center">
-                            <span t-esc="index_lines_table + 1"/>
+                            <span t-out="index_lines_table + 1"/>
                         </div>
                         <div t-att-class="'col-4 border-end border-dark pt-1 ps-1 pb-1' if o.specify_weight_by_bultos_paletas else 'col-6 border-end border-dark pt-1 ps-1 pb-1'">                  
-                            <!-- <t t-if="aggregated_lines[line]['default_code']">[<span t-esc="aggregated_lines[line]['default_code']"/>]</t><span t-esc="aggregated_lines[line]['product_name_only']"/> / SERIE: <span t-esc="aggregated_lines[line]['lots'][:-2]"/> -->
-                            <span t-esc="aggregated_lines[line]['name']"/> / SERIE: <span t-esc="aggregated_lines[line]['lots'][:-2]"/>
+                            <!-- <t t-if="aggregated_lines[line]['default_code']">[<span t-out="aggregated_lines[line]['default_code']"/>]</t><span t-out="aggregated_lines[line]['product_name_only']"/> / SERIE: <span t-out="aggregated_lines[line]['lots'][:-2]"/> -->
+                            <span t-out="aggregated_lines[line]['name']"/> / SERIE: <span t-out="aggregated_lines[line]['lots'][:-2]"/>
                         </div>
                         <div class="col-3 border-end border-dark pt-1 ps-1 pb-1 text-center">                             
-                            <span t-esc="aggregated_lines[line]['product_uom']"/>
+                            <span t-out="aggregated_lines[line]['product_uom'].name"/>
                         </div>
                         <div t-att-class="'col-2 pt-1 ps-1 pb-1 text-right' if not o.specify_weight_by_bultos_paletas else 'col-2 border-end border-dark  pt-1 ps-1 pb-1 text-right'">                            
-                            <span t-esc="aggregated_lines[line]['quantity']"
+                            <span t-out="aggregated_lines[line]['quantity']"
                                 t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
                         </div>
                         <div t-if="o.specify_weight_by_bultos_paletas" class="col-2 pt-1 ps-1 pb-1 text-right">
-                            <span t-esc="aggregated_lines[line]['weight_total']"/>
+                            <span t-out="aggregated_lines[line]['weight_total']"/>
                         </div>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
                     <t t-set="partner" t-value="o.partner_id or (o.move_lines and o.move_lines[0].partner_id) or False"/>
                     <t t-if="partner" name="partner_header">
                         <t t-set="address">
-                            <div t-esc="partner"
+                            <div t-out="partner"
                             t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
                     </t>
                     </t> -->
@@ -48,7 +48,7 @@
                             <div class="col-6 pt-1 ps-1 pb-1 border-end border-dark">
                                 <div></div>
                                 <t t-if="o.transportation_reason == '08'">
-                                <div><strong><t t-esc="aero_port_name"/> DE PARTIDA</strong></div>
+                                <div><strong><t t-out="aero_port_name"/> DE PARTIDA</strong></div>
                                 </t>
                                 <t t-else="">
                                 <div><strong>PUNTO DE PARTIDA</strong></div>
@@ -57,27 +57,27 @@
                                 <div class="d-flex flex-row">
                                     <div style="width: 100%;">
                                         <t t-if="o.transportation_reason == '08'">
-                                        <t t-esc="aero_port.address"/>
+                                        <t t-out="aero_port.address"/>
                                         <t t-if="aero_port.district">
-                                            , <span class="text" t-esc="aero_port.district"/>
+                                            , <span class="text" t-out="aero_port.district"/>
                                         </t>
                                         <t t-if="aero_port.province">
-                                            , <span class="text-nowrap" t-esc="aero_port.province"/>
+                                            , <span class="text-nowrap" t-out="aero_port.province"/>
                                         </t>
                                         <t t-if="aero_port.department">
-                                            , <span class="text-nowrap" t-esc="aero_port.department"/>
+                                            , <span class="text-nowrap" t-out="aero_port.department"/>
                                         </t>
                                         </t>
                                         <t t-else="">
-                                        <t t-esc="o.starting_address.contact_address"/>
+                                        <t t-out="o.starting_address.contact_address"/>
                                         <t t-if="o.starting_address.l10n_pe_district">
-                                            , <span class="text" t-esc="o.starting_address.l10n_pe_district.name or ''"/>
+                                            , <span class="text" t-out="o.starting_address.l10n_pe_district.name or ''"/>
                                         </t>
                                         <t t-if="o.starting_address.city_id">
-                                            , <span class="text-nowrap" t-esc="o.starting_address.city_id.name or ''"/>
+                                            , <span class="text-nowrap" t-out="o.starting_address.city_id.name or ''"/>
                                         </t>
                                         <t t-if="o.starting_address.state_id">
-                                            , <span class="text-nowrap" t-esc="o.starting_address.state_id.name or ''"/>
+                                            , <span class="text-nowrap" t-out="o.starting_address.state_id.name or ''"/>
                                         </t>
                                         </t>
                                     </div>
@@ -88,7 +88,7 @@
                             </div>
                             <div class="col-6 pt-1 ps-1 pb-1">
                                 <t t-if="o.transportation_reason == '09'">
-                                <div><strong><t t-esc="aero_port_name"/> DE LLEGADA</strong></div>
+                                <div><strong><t t-out="aero_port_name"/> DE LLEGADA</strong></div>
                                 </t>
                                 <t t-else="">
                                 <div><strong>PUNTO DE LLEGADA</strong></div>
@@ -97,27 +97,27 @@
                                 <div class="d-flex flex-row">
                                     <div style="width: 100%;">
                                         <t t-if="o.transportation_reason == '09'">
-                                        <t t-esc="aero_port.address"/>
+                                        <t t-out="aero_port.address"/>
                                         <t t-if="aero_port.district">
-                                            , <span class="text" t-esc="aero_port.district"/>
+                                            , <span class="text" t-out="aero_port.district"/>
                                         </t>
                                         <t t-if="aero_port.province">
-                                            , <span class="text-nowrap" t-esc="aero_port.province"/>
+                                            , <span class="text-nowrap" t-out="aero_port.province"/>
                                         </t>
                                         <t t-if="aero_port.department">
-                                            , <span class="text-nowrap" t-esc="aero_port.department"/>
+                                            , <span class="text-nowrap" t-out="aero_port.department"/>
                                         </t>
                                         </t>
                                         <t t-else="">
-                                        <t t-esc="o.destination_address.contact_address"/>
+                                        <t t-out="o.destination_address.contact_address"/>
                                         <t t-if="o.destination_address.l10n_pe_district">
-                                            , <span class="text" t-esc="o.destination_address.l10n_pe_district.name or ''"/>
+                                            , <span class="text" t-out="o.destination_address.l10n_pe_district.name or ''"/>
                                         </t>
                                         <t t-if="o.destination_address.city_id">
-                                            , <span class="text-nowrap" t-esc="o.destination_address.city_id.name or ''"/>
+                                            , <span class="text-nowrap" t-out="o.destination_address.city_id.name or ''"/>
                                         </t>
                                         <t t-if="o.destination_address.state_id">
-                                            , <span class="text-nowrap" t-esc="o.destination_address.state_id.name or ''"/>
+                                            , <span class="text-nowrap" t-out="o.destination_address.state_id.name or ''"/>
                                         </t>
                                         </t>
                                     </div>
@@ -129,14 +129,14 @@
                         </div>
                         <div class="row">
                             <div class="col-6 border border-dark pb-1">
-                                <div class="border-bottom border-dark mx-n3 px-3 pt-1 ps-1 pb-1"><strong>FECHA DE INICIO DE TRASLADO:  </strong><t t-esc="o.departure_date"/></div>
+                                <div class="border-bottom border-dark mx-n3 px-3 pt-1 ps-1 pb-1"><strong>FECHA DE INICIO DE TRASLADO:  </strong><t t-out="o.departure_date"/></div>
                                 <div class="pt-1 ps-1 pb-1">
                                     <t t-if="o.transportation_reason == '09'">
                                     <div>
-                                        <strong>NOMBRE DE <t t-esc="aero_port_name"/> DESTINATARIO</strong>
+                                        <strong>NOMBRE DE <t t-out="aero_port_name"/> DESTINATARIO</strong>
                                     </div>
                                     <div>
-                                        <t t-esc="aero_port.name"/>
+                                        <t t-out="aero_port.name"/>
                                     </div>
                                     </t>
                                     <t t-else="">
@@ -144,14 +144,14 @@
                                         <strong>NOMBRE O RAZÓN SOCIAL DEL DESTINATARIO</strong>
                                     </div>
                                     <div>
-                                        <t t-esc="o.partner_id.display_name"/>
+                                        <t t-out="o.partner_id.display_name"/>
                                     </div>
                                     <div class="d-flex flex-row">
                                         <div class="w-50">
-                                            <strong>RUC/DNI: </strong> <t t-esc="o.partner_id.vat"/>
+                                            <strong>RUC/DNI: </strong> <t t-out="o.partner_id.vat"/>
                                         </div>
                                         <div class="w-50">
-                                            <strong>TEL/CELULAR: </strong> <t t-if="o.partner_id.mobile" t-esc="o.partner_id.mobile"/><t t-else="">-</t>
+                                            <strong>TEL/CELULAR: </strong> <t t-if="o.partner_id.mobile" t-out="o.partner_id.mobile"/><t t-else="">-</t>
                                         </div>
                                     </div>
                                     </t>
@@ -166,30 +166,30 @@
                                 </t>
                                 <div class="pl-2" t-if="o.is_m1l">TRASLADO EN VEHÍCULOS DE CATEGORÍA M1 O L</div>
                                 <div class="pl-2" t-if="o.indicador_traslado_total_damods">TRASLADO TOTAL DAM O DS</div>
-                                <div><strong>TIPO TRANSPORTE: </strong><t t-if="o.transport_type == '01'" t-esc="'PÚBLICO'"/><t t-if="o.transport_type == '02'" t-esc="'PRIVADO'"/></div>
+                                <div><strong>TIPO TRANSPORTE: </strong><t t-if="o.transport_type == '01'" t-out="'PÚBLICO'"/><t t-if="o.transport_type == '02'" t-out="'PRIVADO'"/></div>
                                 <t t-if="o.is_m1l">
-                                    <div t-if="o.vehicle_plate_m1l and o.vehicle_plate_m1l != 'SMT'"><strong>PLACA VEHíCULO: </strong><t t-esc="o.vehicle_plate_m1l"/></div>
+                                    <div t-if="o.vehicle_plate_m1l and o.vehicle_plate_m1l != 'SMT'"><strong>PLACA VEHíCULO: </strong><t t-out="o.vehicle_plate_m1l"/></div>
                                 </t>
                                 <t t-else="">
                                     <div><strong>UNIDAD DE TRANSPORTE Y CONDUCTOR</strong></div>
-                                    <div t-if="o.transport_type == '02'"><strong>PLACA Y VEHICULO: </strong> [<t t-esc="o.driver_id.vehicle_plate"/>] <t t-esc="o.driver_id.vehicle_model"/></div>
+                                    <div t-if="o.transport_type == '02'"><strong>PLACA Y VEHICULO: </strong> [<t t-out="o.driver_id.vehicle_plate"/>] <t t-out="o.driver_id.vehicle_model"/></div>
                                     <t t-if="o.transport_type == '01'">
-                                    <div><strong>EMPRESA: </strong><t t-esc="o.employee_company.name"/></div>
-                                    <div><strong>RUC: </strong> <t t-esc="o.employee_company.vat"/></div>
+                                    <div><strong>EMPRESA: </strong><t t-out="o.employee_company.name"/></div>
+                                    <div><strong>RUC: </strong> <t t-out="o.employee_company.vat"/></div>
                                     </t>
                                     <div t-if="o.transport_type == '02'" class="d-flex flex-row">
                                         <div class="w-50">
-                                            <strong>DNI CONDUCTOR: </strong> <t t-esc="o.driver_id.identification_id"/>
+                                            <strong>DNI CONDUCTOR: </strong> <t t-out="o.driver_id.identification_id"/>
                                         </div>
                                         <div class="w-50">
-                                            <strong>LICENCIA: </strong> <t t-esc="o.driver_id.driver_license"/>
+                                            <strong>LICENCIA: </strong> <t t-out="o.driver_id.driver_license"/>
                                         </div>
                                         <!-- <div class="col-2">
                                             090101
                                         </div>   -->
                                     </div>
                                     <div t-if="o.transport_type == '02'">
-                                        <strong>CONDUCTOR:</strong> <t t-esc="o.driver_id.name"/>
+                                        <strong>CONDUCTOR:</strong> <t t-out="o.driver_id.name"/>
                                     </div>
                                 </t>
                             </div>
@@ -282,7 +282,7 @@
                                     <div class="col-12">
                                         <div class="row border border-bottom-0 border-dark">
                                             <div class="col-1 border-end border-dark pt-1 ps-1 pb-1 text-center">
-                                                <span t-esc="index_lines_table + 1"/>
+                                                <span t-out="index_lines_table + 1"/>
                                             </div>
                                             <div t-att-class="'col-4 border-end border-dark pt-1 ps-1 pb-1' if o.specify_weight_by_bultos_paletas else 'col-6 border-end border-dark pt-1 ps-1 pb-1'">                  
                                                <t t-if="move_line.product_id.default_code">[<span t-field="move_line.product_id.default_code"/>] </t><span t-field="move_line.move_id.description_picking"/>
@@ -291,10 +291,10 @@
                                                 <span t-field="move_line.product_uom_id"/>
                                             </div>
                                             <div t-att-class="'col-2 pt-1 ps-1 pb-1 text-right' if not o.specify_weight_by_bultos_paletas else 'col-2 border-end border-dark  pt-1 ps-1 pb-1 text-right'">                            
-                                                <span t-esc="move_line.quantity"/>
+                                                <span t-out="move_line.quantity"/>
                                             </div>
                                             <div t-if="o.specify_weight_by_bultos_paletas" class="col-2 pt-1 ps-1 pb-1 text-right">
-                                                <span t-esc="move_line.product_id.weight * move_line.quantity"/>
+                                                <span t-out="move_line.product_id.weight * move_line.quantity"/>
                                             </div>
                                             <!-- <div class="col-2 border-end border-dark pt-1 ps-1 pb-1" name="move_line_lot_quantity">
                                                 <span t-field="move_line.quantity"/>
@@ -316,7 +316,7 @@
                                     <div class="col-12">
                                         <div class="row border border-bottom-0 border-dark">
                                             <div class="col-1 border-end border-dark pt-1 ps-1 pb-1 text-center">
-                                                <span t-esc="index_lines_table + 1"/>
+                                                <span t-out="index_lines_table + 1"/>
                                             </div>
                                             <div t-att-class="'col-4 border-end border-dark pt-1 ps-1 pb-1' if o.specify_weight_by_bultos_paletas else 'col-6 border-end border-dark pt-1 ps-1 pb-1'">                  
                                                 <span t-field="quant.product_id"/>
@@ -325,10 +325,10 @@
                                                 <span t-field="quant.product_uom_id"/>
                                             </div>
                                             <div t-att-class="'col-2 pt-1 ps-1 pb-1 text-right' if not o.specify_weight_by_bultos_paletas else 'col-2 border-end border-dark  pt-1 ps-1 pb-1 text-right'">                            
-                                                <span t-esc="quant.quantity"/>
+                                                <span t-out="quant.quantity"/>
                                             </div>
                                             <div t-if="o.specify_weight_by_bultos_paletas" class="col-2 pt-1 ps-1 pb-1 text-right">
-                                                <!-- <span t-esc="stock_group.total_package_items_weight + stock_group.package_type_id.package_type_weight"/> -->
+                                                <!-- <span t-out="stock_group.total_package_items_weight + stock_group.package_type_id.package_type_weight"/> -->
                                             </div>
                                         </div>
                                     </div>
@@ -367,7 +367,7 @@
                                 <div class="col-12">
                                     <div class="row border border-bottom-0 border-dark">
                                         <div class="col-1 border-end border-dark pt-1 ps-1 pb-1 text-center">
-                                            <span t-esc="stock_group_index + 1"/>
+                                            <span t-out="stock_group_index + 1"/>
                                         </div>
                                         <div t-att-class="'col-4 border-end border-dark pt-1 ps-1 pb-1' if o.specify_weight_by_bultos_paletas else 'col-6 border-end border-dark pt-1 ps-1 pb-1'">                  
                                             <span t-field="stock_group.name"/>
@@ -376,10 +376,10 @@
                                             <span t-field="stock_group.package_type_id.package_type_uom.name"/>
                                         </div>
                                         <div t-att-class="'col-2 pt-1 ps-1 pb-1 text-right' if not o.specify_weight_by_bultos_paletas else 'col-2 border-end border-dark  pt-1 ps-1 pb-1 text-right'">                            
-                                            <span t-esc="'1'"/>
+                                            <span t-out="'1'"/>
                                         </div>
                                         <div t-if="o.specify_weight_by_bultos_paletas" class="col-2 pt-1 ps-1 pb-1 text-right">
-                                            <span t-esc="stock_group.total_package_items_weight + stock_group.package_type_id.package_type_weight"/>
+                                            <span t-out="stock_group.total_package_items_weight + stock_group.package_type_id.package_type_weight"/>
                                         </div>
                                     </div>
                                 </div>
@@ -389,7 +389,7 @@
                         <div class="row border border-dark mx-n3">
                             <div class="col-6 border-end border-dark pt-1 ps-1 pb-1">
                                 <div t-if="o.origin_invoice">
-                                    <strong>COMPROBANTE ELECTRONICO:</strong> <t t-esc="o.origin_invoice.name"/>
+                                    <strong>COMPROBANTE ELECTRONICO:</strong> <t t-out="o.origin_invoice.name"/>
                                 </div>
                                 <t t-if="o.related_document">
                                     <div>
@@ -397,60 +397,60 @@
                                     </div>
                                     <t t-foreach="o.related_document" t-as="document">
                                         <div class="pl-2">
-                                            <strong><t t-esc="dict(document.PE_RELATED_DOCUMENT)[document.related_document_type]"/>: </strong> <t t-esc="document.related_document_number"/>
+                                            <strong><t t-out="dict(document.PE_RELATED_DOCUMENT)[document.related_document_type]"/>: </strong> <t t-out="document.related_document_number"/>
                                         </div>
                                     </t>
                                 </t>
                                 <div t-if="o.condition">
-                                    <strong>CONDICIÓN DE PAGO</strong> <t t-esc="o.condition"/>
+                                    <strong>CONDICIÓN DE PAGO</strong> <t t-out="o.condition"/>
                                 </div>
                                 <t t-if="o.gross_weight_measure">
                                     <div>
-                                        <strong>PESO BRUTO TOTAL CARGA: </strong> <t t-esc="'%.*f' % (3, float(o.gross_weight_measure))"/>
-                                        <!-- <t t-esc="'%.*f' % (3, sum([x.product_id.weight for x in o.move_ids_without_package.filtered(lambda ml: ml.quantity_done > 0)]))"/> -->
+                                        <strong>PESO BRUTO TOTAL CARGA: </strong> <t t-out="'%.*f' % (3, float(o.gross_weight_measure))"/>
+                                        <!-- <t t-out="'%.*f' % (3, sum([x.product_id.weight for x in o.move_ids_without_package.filtered(lambda ml: ml.quantity_done > 0)]))"/> -->
                                     </div>
                                 </t>
                                 <t t-if="o.net_weight_measure">
                                     <div>
-                                        <strong>PESO BRUTO TOTAL ITEMS: </strong> <t t-esc="'%.*f' % (3, float(o.net_weight_measure))"/>
-                                        <!-- <t t-esc="'%.*f' % (3, sum([x.product_id.weight for x in o.move_ids_without_package.filtered(lambda ml: ml.quantity_done > 0)]))"/> -->
+                                        <strong>PESO BRUTO TOTAL ITEMS: </strong> <t t-out="'%.*f' % (3, float(o.net_weight_measure))"/>
+                                        <!-- <t t-out="'%.*f' % (3, sum([x.product_id.weight for x in o.move_ids_without_package.filtered(lambda ml: ml.quantity_done > 0)]))"/> -->
                                     </div>
                                 </t>
                                 <t t-if="o.type_aero_port_location">
                                     <div>
-                                        <strong><t t-esc="dict(o.SELECTION_AERO_PORT_LOCATION)[o.type_aero_port_location]"/>: </strong> <t t-if="o.type_aero_port_location == '1'"> [<t t-esc="o.port_locations.code"/>] <t t-esc="o.port_locations.name"/></t> <t t-if="o.type_aero_port_location == '2'"> [<t t-esc="o.aeroport_locations.code"/>] <t t-esc="o.aeroport_locations.name"/></t>
+                                        <strong><t t-out="dict(o.SELECTION_AERO_PORT_LOCATION)[o.type_aero_port_location]"/>: </strong> <t t-if="o.type_aero_port_location == '1'"> [<t t-out="o.port_locations.code"/>] <t t-out="o.port_locations.name"/></t> <t t-if="o.type_aero_port_location == '2'"> [<t t-out="o.aeroport_locations.code"/>] <t t-out="o.aeroport_locations.name"/></t>
                                     </div>
                                 </t>
                                 <t t-if="o.total_transport_handling_unit_quantity">
                                     <div>
-                                        <strong>NÚMERO DE BULTOS O PALLETS: </strong> <t t-esc="o.total_transport_handling_unit_quantity"/>
+                                        <strong>NÚMERO DE BULTOS O PALLETS: </strong> <t t-out="o.total_transport_handling_unit_quantity"/>
                                     </div>
                                 </t>
                                 <t t-if="o.first_package">
                                     <div>
-                                        <strong>CONTENEDOR 1: </strong> <t t-esc="o.first_package"/>
+                                        <strong>CONTENEDOR 1: </strong> <t t-out="o.first_package"/>
                                     </div>
                                     <div>
-                                        <strong>NÚMERO DE PRECINTO 1: </strong> <t t-esc="o.first_package_trace"/>
+                                        <strong>NÚMERO DE PRECINTO 1: </strong> <t t-out="o.first_package_trace"/>
                                     </div>
                                 </t>
                                 <t t-if="o.second_package">
                                     <div>
-                                        <strong>CONTENEDOR 2: </strong> <t t-esc="o.second_package"/>
+                                        <strong>CONTENEDOR 2: </strong> <t t-out="o.second_package"/>
                                     </div>
                                     <div>
-                                        <strong>NÚMERO DE PRECINTO 2: </strong> <t t-esc="o.second_package_trace"/>
+                                        <strong>NÚMERO DE PRECINTO 2: </strong> <t t-out="o.second_package_trace"/>
                                     </div>
                                 </t>
                             </div>
                             <div class="col-6 pt-1 ps-1 pb-1">
                                 <t t-if="o.net_weight_measure_information">
                                     <div><strong>SUSTENTO DIFERENCIA PESO BRUTO TOTAL</strong></div>
-                                    <div class="pl-2"><t t-esc="o.net_weight_measure_information"/></div>
+                                    <div class="pl-2"><t t-out="o.net_weight_measure_information"/></div>
                                 </t>
                                 <!-- <t t-if="o.comments"> -->
                                 <div><strong>COMENTARIOS</strong></div>
-                                <div class="pl-2"><t t-esc="o.comments"/></div>
+                                <div class="pl-2"><t t-out="o.comments"/></div>
                                 <!-- </t> -->
                                 <!-- NEW -->
                             </div>
@@ -550,7 +550,7 @@
                         <t t-if="o.transportation_reason == '13'">
                             <div class="border border-bottom-0 border-dark mx-n3 pt-1 ps-1 pb-1">                            
                                 <div>
-                                    <strong>Descripción razón otros: </strong> <t t-esc="o.handling_instructions.name"/>
+                                    <strong>Descripción razón otros: </strong> <t t-out="o.handling_instructions.name"/>
                                 </div>
                             </div>
                         </t>
