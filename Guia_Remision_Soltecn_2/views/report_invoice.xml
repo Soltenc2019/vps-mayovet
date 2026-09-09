@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="Invoice_OdooFact_Soltecn.report_invoice_document">
+        <xpath expr="//dt[@id='guiaremision']" position="after">
+            <dd class="col-7 col-sm-7 mb-0">
+                <t t-foreach="o.available_guide_reference" t-as="pick_number">
+                    <span class="text-nowrap"  t-esc="pick_number.serial_referral_guide + ' '"/>
+                </t>
+            </dd>
+        </xpath>
+    </template>
+</odoo>

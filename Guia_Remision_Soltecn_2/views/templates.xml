@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets" inherit_id="point_of_sale.assets">
+        <xpath expr="." position="inside">
+            <!-- <link rel="stylesheet" href="/Invoice_SUNAT_Soltecn/static/src/css/custom_pos_receipts.css"/> -->
+            <!-- <script type="text/javascript" src="/Invoice_SUNAT_Soltecn/static/src/js/SaleDetailsButtonCustom.js"></script> -->
+        </xpath>
+    </template>
+
+</odoo>

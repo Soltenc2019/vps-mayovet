@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Catalogo 23  - Regímenes de Retención -->
+    <record id="l10n_pe_edi_cat23_01" model="l10n_pe_edi.catalog.23"><field name="code">01</field><field name="name">Tasa 3%</field><field name="rate">3.0</field></record>
+    <record id="l10n_pe_edi_cat23_02" model="l10n_pe_edi.catalog.23"><field name="code">02</field><field name="name">Tasa 6%</field><field name="rate">6.0</field></record>
+</odoo>

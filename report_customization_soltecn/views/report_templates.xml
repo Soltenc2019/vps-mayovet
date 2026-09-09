@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="external_layout_boxed" inherit_id="invoice_sunat_soltecn_v16.external_layout_boxed">
+            <xpath expr='//div' position="replace">
+                <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+                    <div class="o_boxed_header" style="font-size: 0.75rem !important;">
+                        <div class="row pb-2"> 
+                            <div t-att-class="'col-' + str(company.max_column_logo)" t-attf-style="display: -webkit-box; -webkit-box-pack: center; -webkit-box-orient: vertical;">
+                                <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo" class="img-fluid" style="max-height: 150px;"/>
+                            </div>
+                            <div t-att-class="'col-' + str(8 - company.max_column_logo)+' ps-3'" t-attf-style="display: -webkit-box; -webkit-box-pack: center; -webkit-box-orient: vertical;">
+                                <h4 t-if="company.report_header != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'" t-field="company.report_header"/>
+                                <div name="company_address" class="text-center w-100">
+                                    <span t-if="company.company_details" t-field="company.company_details"></span>
+                                </div>
+                            </div>
+                            <t t-if="o">
+                                <t t-if="'account.move' == o._name">
+                                    <div class="col-4" t-attf-style="display: -webkit-box; -webkit-box-pack: center; -webkit-box-orient: vertical;">
+                                        <div class="border border-dark rounded text-center p-2">
+                                            <h5>
+                                                <span class="font-weight-bold fs-6">RUC <t t-esc="o.company_id.vat"/></span>
+                                            </h5>
+                                            <h5>
+                                                <span class="font-weight-bold fs-6 text-uppercase"><t t-esc="o.l10n_latam_document_type_id and o.l10n_latam_document_type_id.report_name or ''"/></span>
+                                            </h5>
+                                            <h5>
+                                                <span class="font-weight-bold fs-6" t-esc="o.name or ''"/>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[@t-attf-class=&#34;article o_report_layout_boxed o_company_#{company.id}_layout {{  'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}&#34;]" position="replace">
+                <div t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout {{  'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}" t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' }});" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+                    <t t-foreach="company.space_body_header" t-as="item">
+                        <br/>
+                    </t>
+                    <div t-att-class="'pt-' + str(company.padding_top_layout)">
+                        <t t-call="web.address_layout"/>
+                    </div>
+                    <t t-raw="0"/>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

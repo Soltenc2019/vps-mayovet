@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>	
+    <!-- Principales puertos en el Perú-->
+	<record id="view_catalog_64_tree" model="ir.ui.view">
+		<field name="name">Catalogo 64 - Principales puertos en el Perú</field>
+		<field name="model">catalog.64</field>
+		<field name="arch" type="xml">
+			<tree string="Principales puertos en el Perú">
+				<field name="code"/>
+				<field name="name"/>
+                <field name="ubigeo"/>
+                <field name="address"/>
+                <field name="type_aeroport"/>
+				<field name="active"/>
+			</tree>
+		</field>
+	</record>
+	<record id="view_catalog_64_form" model="ir.ui.view">
+		<field name="name">Catalogo 64 - Principales puertos en el Perú</field>
+		<field name="model">catalog.64</field>
+		<field name="arch" type="xml">
+			<form string="Principales puertos en el Perú">
+				<group>
+					<group>
+						<field name="code"/>
+                        <field name="name"/>
+                        <field name="ubigeo"/>
+                        <field name="department"/>
+                        <field name="province"/>
+                        <field name="district"/>
+					</group>
+                    <group>
+                        <field name="address"/>
+                        <field name="type_aeroport"/>
+                        <field name="active"/>
+                    </group>
+				</group>
+			</form>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="catalog_64_action">
+		<field name="name">Catalogo 64 - Principales puertos en el Perú</field>
+		<field name="res_model">catalog.64</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+    
+	<record id="view_catalog_63_tree" model="ir.ui.view">
+		<field name="name">Catalogo 63 - Principales aeropuertos en el Perú</field>
+		<field name="model">catalog.63</field>
+		<field name="arch" type="xml">
+			<tree string="Principales aeropuertos en el Perú">
+				<field name="code"/>
+				<field name="name"/>
+                <field name="ubigeo"/>
+                <field name="address"/>
+				<field name="active"/>
+			</tree>
+		</field>
+	</record>
+	<record id="view_catalog_63_form" model="ir.ui.view">
+		<field name="name">Catalogo 63 - Principales aeropuertos en el Perú</field>
+		<field name="model">catalog.63</field>
+		<field name="arch" type="xml">
+			<form string="Principales aeropuertos en el Perú">
+				<group>
+					<group>
+						<field name="code"/>
+                        <field name="name"/>
+                        <field name="ubigeo"/>
+                        <field name="department"/>
+                        <field name="province"/>
+                        <field name="district"/>
+					</group>
+                    <group>
+                        <field name="address"/>
+                        <field name="active"/>
+                    </group>
+				</group>
+			</form>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="catalog_63_action">
+		<field name="name">Catalogo 63 - Principales aeropuertos en el Perú</field>
+		<field name="res_model">catalog.63</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<menuitem name="Catalogos puerto y aeropuertos" id="catalog_64_configuration_menu" parent="account.menu_finance_configuration" sequence="23">
+        <menuitem name="Catalog 63 - Principales puertos en el Perú" id="l10n_pe_edi_catalog_63_menu" action="catalog_63_action" sequence="23"/>
+		<menuitem name="Catalog 64 - Principales aeropuertos en el Perú" id="l10n_pe_edi_catalog_64_menu" action="catalog_64_action" sequence="23"/>
+	</menuitem>
+</odoo>

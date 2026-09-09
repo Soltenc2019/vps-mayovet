@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>	
+    <!-- Codigos- Regimenes de Retencion-->
+	<record id="view_catalog_23_tree" model="ir.ui.view">
+		<field name="name">Codigos- Regimenes de Retencion</field>
+		<field name="model">l10n_pe_edi.catalog.23</field>
+		<field name="arch" type="xml">
+			<tree string="Codigos- Regimenes de Retencion">
+				<field name="code"/>
+				<field name="name"/>
+				<field name="active"/>
+			</tree>
+		</field>
+	</record>
+	<record id="view_catalog_23_form" model="ir.ui.view">
+		<field name="name">Codigos- Regimenes de Retencion</field>
+		<field name="model">l10n_pe_edi.catalog.23</field>
+		<field name="arch" type="xml">
+			<form string="Codigos- Regimenes de Retencion">
+				<group>
+					<group>
+						<field name="code"/>
+						<field name="name"/>
+						<field name="active"/>
+					</group>
+				</group>
+			</form>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="catalog_23_action">
+		<field name="name">Codigos- Regimenes de Retencion</field>
+		<field name="res_model">l10n_pe_edi.catalog.23</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+    <!-- Menu -->
+	<menuitem name="Factura Electronica" id="l10n_pe_edi_configuration_menu" parent="account.menu_finance_configuration" sequence="23">
+		<menuitem name="Catalog 23 - Codigos- Regimenes de Retencion" id="l10n_pe_edi_catalog_23_menu" action="catalog_23_action" sequence="23"/>
+	</menuitem>
+</odoo>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+        <!-- Inherit Form View to Modify it -->
+        <record id="view_picking_form_custom" model="ir.ui.view">
+            <field name="name">stock.picking.form.custom</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='use_create_lots']" position="after">
+                    <field name="edi_state" invisible="1"/>
+                </xpath>
+                <xpath expr="//header" position="after">
+                    <div class="alert alert-info" role="alert" style="margin-bottom:0px;" invisible="edi_state != 'to_send' or serial_referral_guide == False">
+                         <div>Enviar guía de remisión a SUNAT:
+                            <!-- <field name="edi_web_services_to_process" class="oe_inline"/> -->
+                         </div>
+                         <button name="action_process_edi_web_services" type="object" class="oe_link" string="Enviar ahora" /> 
+                    </div>
+                    <div class="alert alert-info" role="alert" style="margin-bottom:0px;" invisible="edi_state != 'ticket' or serial_referral_guide == False">
+                         <div>Verificar estado guía de remisión:
+                            <!-- <field name="edi_web_services_to_process" class="oe_inline"/> -->
+                         </div>
+                         <button name="action_check_ticket_edi_web_services" type="object" class="oe_link" string="Verificar ahora" /> 
+                    </div>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Guía remisión" name="referral_guide" invisible="picking_type_code != 'outgoing' or state != 'done' or picking_type_use_referrer_guide == False">
+                        <group>
+                            <group invisible="1">
+                                <field name="driver_license" required="destination_address == True and picking_type_use_referrer_guide == True"/>
+                                <field name="destination_address_distrito" required="destination_address != False and picking_type_use_referrer_guide == True"/>
+                                <field name="destination_address_provincia" required="destination_address != False and picking_type_use_referrer_guide == True"/>
+                                <field name="destination_address_departamento" required="destination_address != False and picking_type_use_referrer_guide == True"/>
+                                <field name="starting_address_departamento" required="destination_address != True or picking_type_use_referrer_guide == True"/>
+                                <field name="starting_address_provincia" required="destination_address != True or picking_type_use_referrer_guide == True"/>
+                                <field name="starting_address_distrito" required="destination_address != True or picking_type_use_referrer_guide == True"/>
+                            </group>
+                            <group string="Datos de Transporte" name="tranportation">
+                                <field name="transportation_department_default" invisible="1"/>
+                                <field name="transport_type" readonly="edi_state == 'cdr_aceptado'"/>
+                                <field name="vehicle_plate_m1l" required="is_m1l == True" readonly="edi_state == 'cdr_aceptado'" invisible="is_m1l == False"/>
+                                <field name="driver_id" widget="many2one_avatar_employee" domain="[('department_id','=', transportation_department_default)]" context="{'default_department_id': transportation_department_default}" readonly="edi_state == 'cdr_aceptado'" invisible="transport_type != '02' or is_m1l == True"/>
+                                <field name="first_name" required="transport_type == '02' and driver_id == True and picking_type_use_referrer_guide == True" invisible="transport_type != '02' or is_m1l == True"/>
+                                <field name="family_name" required="transport_type == '02' and driver_id == True and picking_type_use_referrer_guide == True" invisible="transport_type != '02' or is_m1l == True"/>
+                                <field name="identification_id" required="transport_type == '02' and driver_id == True and picking_type_use_referrer_guide == True" invisible="transport_type != '02' or is_m1l == True"/>
+                                <field name="driver_license" required="transport_type == '02' and driver_id == True and picking_type_use_referrer_guide == True" invisible="transport_type != '02' or is_m1l == True"/>
+                                <field name="vehicle_plate" required="transport_type == '02' and driver_id == True and picking_type_use_referrer_guide == True" invisible="transport_type != '02' or is_m1l == True"/>
+                                <field name="vehicle_model" invisible="transport_type != '02' or is_m1l == True"/>
+                                <field name="employee_company"  domain="[('l10n_latam_identification_type_id', '=', 4)]" required="transport_type == '01' or driver_id == True or picking_type_use_referrer_guide == True" invisible="transport_type != '01' or is_m1l == True"/>
+                                <!--NEW-->
+                                <field name="merch_delivery_to_driver" required="transport_type == '01' and picking_type_use_referrer_guide != False" invisible="transport_type != '01' or is_m1l == True" readonly="edi_state == 'cdr_aceptado'"/>
+                                <field name="employee_company_name" required="transport_type == '01' or driver_id == True or picking_type_use_referrer_guide == True" invisible="transport_type != '01' or is_m1l == True"/>
+                                <field name="employee_company_ruc" required="transport_type == '01' or driver_id == True or picking_type_use_referrer_guide == True" invisible="transport_type != '01' or is_m1l == True"/>
+                            </group>
+                            <group string="Datos Guía Remisión" name="guide">
+                                <field name="specify_weight" invisible="1"/>
+                                <field name="origin_invoice"/>
+                                <field name="sequence_serial_guide"/>
+                                <field name="serial_referral_guide"/>
+                                <field name="transportation_reason" readonly="edi_state == 'cdr_aceptado'"/>
+                                <field name="handling_instructions" options="{'no_create': True, 'no_edit': True}" readonly="edi_state == 'cdr_aceptado'" invisible="transportation_reason != '13'" required="transportation_reason == '13'"/>
+                                <field name="starting_address" invisible="transportation_reason == '08'"/>
+                                <field name="type_aero_port_location" string="Tipo locación partida" invisible="transportation_reason != '08'"/>
+                                <field name="port_locations" string="Puerto partida" invisible="transportation_reason != '08' or type_aero_port_location != '1'" required="transportation_reason == '08' or type_aero_port_location == '1'"/>
+                                <field name="aeroport_locations" string="Aeropuerto partida" invisible="transportation_reason != '08' or type_aero_port_location != '2'" required="transportation_reason == '08' or type_aero_port_location == '2'"/>
+                                <field name="partner_id_vat" invisible="1"/>
+                                <field name="destination_address" widget="res_partner_many2one" invisible="transportation_reason == '09'" readonly="edi_state == 'cdr_aceptado'"/>
+                                <field name="type_aero_port_location" string="Tipo locación destino" invisible="transportation_reason != '09'"/>
+                                <field name="port_locations" string="Puerto destino" invisible="transportation_reason != '09' or type_aero_port_location != '1'" required="transportation_reason == '09' or type_aero_port_location == '1'"/>
+                                <field name="aeroport_locations" string="Aeropuerto destino" invisible="transportation_reason != '09' or type_aero_port_location != '2'" required="transportation_reason == '09' or type_aero_port_location == '2'"/>
+                                <field name="departure_date" eval="DateTime.today()" readonly="edi_state == 'cdr_aceptado'"/>
+                                <field name="arrival_date" eval="DateTime.today()" readonly="edi_state == 'cdr_aceptado'"/>
+                                <field name="sale_id" invisible="1"/>
+                                <field name="total_transport_handling_unit_quantity" required="transportation_reason in ('08','09')"/>
+                                <field name="gross_weight_measure" readonly="edi_state == 'cdr_aceptado' or specify_weight == True" required="state == 'done' or specify_weight == True or transportation_reason != False"/>
+                                <field name="condition" readonly="True"/>
+                                <field name="comments" readonly="edi_state == 'cdr_aceptado'"/>
+                            </group>
+                            <group string="Indicadores especiales" name="pe_edi_group_related_documents" readonly="edi_state not in ('cdr_aceptado', 'cancelled')">
+                                <field name="is_m1l" readonly="edi_state == 'cdr_aceptado'"/>
+                                <field name="indicador_traslado_total_damods" invisible="transportation_reason not in ('08','09')" readonly="edi_state == 'cdr_aceptado'"/>
+                            </group>
+                            <group string="Importación o exportación" name="importation_exportation" readonly="edi_state not in ('cdr_aceptado', 'cancelled')" invisible="transportation_reason not in ('08','09')">
+                                <field name="net_weight_measure" invisible="indicador_traslado_total_damods == True" required="transportation_reason in ('08','09') and indicador_traslado_total_damods == False"/>
+                                <field name="net_weight_measure_information" invisible="net_weight_measure in (False, '')" required="net_weight_measure not in (False, '')"/>
+                                <field name="first_package" required="transportation_reason in ('08','09') and total_transport_handling_unit_quantity in (False, '')"/>
+                                <field name="first_package_trace" required="first_package not in (False, '')"/>
+                                <field name="second_package" invisible="first_package in (False, '')" required="second_package_trace not in (False,'')"/>
+                                <field name="second_package_trace" invisible="first_package in (False, '')" required="second_package not in (False, '')"/>
+                            </group>
+                            <group string="Respuestas SUNAT" name="sunats_responses">
+                                <field name="blocking_level"/>
+                                <field name="error"/>
+                                <field name="response_num_ticket"/>
+                                <field name="fec_recepcion"/>
+                            </group>
+                        </group>
+                    </page>                   
+                    <page string="Documentos relacionados" name="related_documents" invisible="picking_type_code != 'outgoing' or picking_type_use_referrer_guide == False or transportation_reason not in ('08','09')">
+                        <field name="related_document" required="transportation_reason in ('08','09')">
+                            <tree editable="bottom" string="Documentos">
+                                <field name="related_document_type"/>
+                                <field name="related_document_number"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+                <xpath expr="//group/group[2]" position="inside">
+                    <field name="edi_state" invisible="picking_type_code != 'outgoing' or picking_type_use_referrer_guide == False"/>
+                    <field name="picking_type_use_referrer_guide" invisible="1"/>
+                </xpath>
+                <xpath expr="//page[@name='operations']//field[@name='move_ids_without_package']//field[@name='product_uom']" position="before">
+                    <field name="picking_id" invisible="1"/>
+                    <field name="damds_number" column_invisible="parent.transportation_reason not in ('08','09') or parent.indicador_traslado_total_damods == True" required="parent.transportation_reason in ('08','09') or parent.indicador_traslado_total_damods == False"/>
+                    <field name="damds_serie" column_invisible="parent.transportation_reason not in ('08','09') or parent.indicador_traslado_total_damods not in ('','=', True)" required="parent.transportation_reason in ('08','09') or parent.indicador_traslado_total_damods == False"/>
+                </xpath>
+                <!-- <xpath expr="//page[@name='operations']//field[@name='move_ids_without_package']" position="attributes">
+                    <attribute name="readonly">{False}</attribute>
+                </xpath> -->
+                <xpath expr="//page[@name='operations']//field[@name='move_ids_without_package']//field[@name='description_picking']" position="replace">
+                    <field name="description_picking" string="Description" optional="hide" readonly="parent.state == 'done' or parent.is_locked == True"/>
+                </xpath>
+                <xpath expr="//page[@name='operations']//field[@name='move_ids_without_package']//field[@name='date']" position="replace">
+                    <field name="date" optional="hide" readonly="parent.state == 'done' or parent.is_locked == True"/>
+                </xpath>
+            </field>
+        </record>
+</odoo>

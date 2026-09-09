@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<odoo>
+    <template id="pe_ubl_2_1_refund_line" inherit_id="l10n_pe_edi.pe_ubl_2_1_common_line" primary="True">
+        <!-- BASE PE EDI-->
+        <xpath expr="//*[name()='cbc:ID']" position="after">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:CreditedQuantity
+                        t-att-unitCode="line.product_uom_id.l10n_pe_edi_measure_unit_code"
+                        t-esc='line.quantity'/>
+            </t>
+        </xpath>
+        <!-- BASE PE EDI-->
+        <!-- CHANGES 2022 OPERACION GRATUITO -->
+        <xpath expr="//*[name()='cbc:LineExtensionAmount']" position="replace">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-if="line.tax_ids[0].l10n_pe_edi_tax_code == '9996'">
+                    <cbc:LineExtensionAmount
+                                t-att-currencyID="line.currency_id.name"
+                                t-esc="format_float(line.quantity * line_vals['price_total_unit'])"/>
+                </t>
+                <t t-else="">
+                    <cbc:LineExtensionAmount
+                                t-att-currencyID="line.currency_id.name"
+                                t-esc="format_float(line.price_subtotal)"/>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//*[name()='cbc:TaxAmount'][1]" position="replace">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-if="line.tax_ids[0].l10n_pe_edi_tax_code == '9996'">
+                    <cbc:TaxAmount
+                                t-att-currencyID="line.currency_id.name"
+                                t-esc="format_float(0)"/>
+                </t>
+                <t t-else="">
+                    <cbc:TaxAmount
+                            t-att-currencyID="line.currency_id.name"
+                            t-esc="format_float(line.price_total - line.price_subtotal)"/>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//*[name()='cbc:Percent']" position="replace">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-if="line.tax_ids[0].l10n_pe_edi_tax_code == '9996'">
+                    <cbc:Percent
+                        t-if="tax.amount_type == 'percent'"
+                        t-esc="format_float(18)"/>
+                </t>
+                <t t-else="">
+                    <cbc:Percent
+                        t-if="tax.amount_type == 'percent'"
+                        t-esc="tax.amount"/>
+                </t>
+            </t>
+        </xpath>
+        <!-- CHANGES 2022 /-->
+    </template>
+
+    <template id="pe_ubl_2_1_refund_body" inherit_id="l10n_pe_edi.pe_ubl_2_1_common" primary="True">
+        <!-- BASE PE EDI-->
+        <xpath expr="//*[name()='cbc:DocumentCurrencyCode']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cac:DiscrepancyResponse t-if="record.l10n_latam_document_type_id.code == '07'">
+                    <cbc:ResponseCode t-esc="record.l10n_pe_edi_refund_reason"/>
+                    <cbc:Description t-esc="record.ref"/>
+                </cac:DiscrepancyResponse>
+                <cac:BillingReference>
+                    <cac:InvoiceDocumentReference t-if="record.reversed_entry_id">
+                        <cbc:ID t-esc="record.reversed_entry_id.name.replace(' ', '')"/>
+                        <cbc:DocumentTypeCode t-esc="record.reversed_entry_id.l10n_latam_document_type_id.code"/>
+                    </cac:InvoiceDocumentReference>
+                </cac:BillingReference>
+            </t>
+        </xpath>
+        <xpath expr="//*[name()='cac:TaxTotal']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cac:LegalMonetaryTotal>
+                    <!-- Anticipo -->
+                    <t t-if="record.reference_downpayments_invoice">
+                        <t t-set="LineExtensionAmountDownpayment" t-value="0"/>
+                        <t t-set="TaxInclusiveAmountDownpayment" t-value="0"/>
+                        <t t-foreach="record.reference_downpayments_invoice" t-as="downpayment">
+                            <t t-set="LineExtensionAmountDownpayment" t-value="LineExtensionAmountDownpayment + downpayment.amount_untaxed"/>
+                            <t t-set="TaxInclusiveAmountDownpayment" t-value="TaxInclusiveAmountDownpayment + downpayment.amount_total"/>
+                        </t>
+                        <cbc:LineExtensionAmount
+                            t-att-currencyID="record.currency_id.name"
+                            t-esc="format_float(record.amount_untaxed + LineExtensionAmountDownpayment)"/>
+                        <cbc:TaxInclusiveAmount
+                            t-att-currencyID="record.currency_id.name"
+                            t-esc="format_float(record.amount_total + TaxInclusiveAmountDownpayment)"/>
+                        <cbc:PrepaidAmount t-att-currencyID="record.currency_id.name" t-esc="format_float(TaxInclusiveAmountDownpayment)"/>
+                        <cbc:PayableAmount
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_float(record.amount_total)"/>
+                    </t>
+                    <!-- Anticipo /-->
+                    <!-- BASE PE EDI -->
+                    <t t-else="">
+                        <cbc:LineExtensionAmount
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_float(record.amount_untaxed)"/>
+                        <cbc:TaxInclusiveAmount
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_float(record.amount_total)"/>
+                        <cbc:PayableAmount
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_float(record.amount_total)"/>
+                    </t>
+                    <!-- BASE PE EDI -->
+                </cac:LegalMonetaryTotal>
+                <!-- Anticipo -->
+                <!-- FILTRO A VARIABLE 'invoice_line_vals_list' DEBIDO A LINEAS NEGATIVAS ANTICIPO -->
+                <cac:CreditNoteLine t-foreach="[x for x in invoice_line_vals_list if x['line'].price_total >= 0]" t-as="line_vals">
+                    <t t-call="l10n_pe_edi.pe_ubl_2_1_refund_line"/>
+                </cac:CreditNoteLine>
+                <!-- Anticipo /-->
+            </t>
+        </xpath>
+        <!-- BASE PE EDI-->
+        <!-- CHANGES 2022 -->
+        <!-- Anticipo -->
+        <xpath expr="//*[name()='cbc:DocumentCurrencyCode']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <cac:AdditionalDocumentReference t-foreach="record.reference_downpayments_invoice" t-as="reference_downpayment_invoice">
+                        <cbc:ID t-esc="reference_downpayment_invoice.sequence_prefix + str(reference_downpayment_invoice.sequence_number)" />
+                        <t t-if="reference_downpayment_invoice.l10n_latam_document_type_id_code == '01'">
+                            <cbc:DocumentTypeCode>02</cbc:DocumentTypeCode>
+                        </t>
+                        <t t-else="">
+                            <t t-if="reference_downpayment_invoice.l10n_latam_document_type_id_code == '03'">
+                                <cbc:DocumentTypeCode>03</cbc:DocumentTypeCode>
+                            </t>
+                        </t>
+                        <cbc:DocumentStatusCode t-esc="reference_downpayment_invoice_index + 1"/>
+                        <cac:IssuerParty>
+                            <cac:PartyIdentification>
+                                <cbc:ID 
+                                t-att-schemeID="record.company_id.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code"
+                                t-esc="record.company_id.partner_id.vat"/>
+                            </cac:PartyIdentification>
+                        </cac:IssuerParty>
+                    </cac:AdditionalDocumentReference>
+            </t>
+        </xpath>
+        <!-- Anticipo -->
+        <xpath expr="//*[name()='t'][3]" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <!-- Anticipo -->
+                <cac:PrepaidPayment t-foreach="record.reference_downpayments_invoice" t-as="downpayment">
+                    <cbc:ID t-esc="downpayment_index + 1"/>
+                    <cbc:PaidAmount  t-att-currencyID="downpayment.currency_id.name" t-esc="abs(downpayment.amount_total)"/>
+                </cac:PrepaidPayment>
+                <!-- Anticipo /-->
+                <!-- Retention -->
+                <t t-if="record.l10n_pe_edi_retention_type_id">
+                    <cac:AllowanceCharge>
+                        <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+                        <cbc:AllowanceChargeReasonCode>62</cbc:AllowanceChargeReasonCode>
+                        <cbc:MultiplierFactorNumeric t-esc="record.l10n_pe_edi_retention_type_id.rate / 100"/>
+                        <cbc:Amount t-att-currencyID="record.currency_id.name" t-esc="record.l10n_pe_edi_total_retention" />
+                        <cbc:BaseAmount t-att-currencyID="record.currency_id.name" t-esc="record.amount_total" />
+                    </cac:AllowanceCharge>
+                </t>
+                <!-- Retention /-->
+                <!-- Anticipo -->
+                <t t-if="record.reference_downpayments_invoice">
+                    <t t-set="LineExtensionAmountDownpayment" t-value="0"/>
+                    <t t-foreach="record.reference_downpayments_invoice" t-as="downpayment">
+                        <t t-set="LineExtensionAmountDownpayment" t-value="LineExtensionAmountDownpayment + downpayment.amount_untaxed"/>
+                    </t>
+                    <cac:AllowanceCharge>
+                        <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+                        <cbc:AllowanceChargeReasonCode>04</cbc:AllowanceChargeReasonCode>
+                        <cbc:Amount t-att-currencyID="record.currency_id.name" t-esc="format_float(LineExtensionAmountDownpayment)" />
+                        <cbc:BaseAmount t-att-currencyID="record.currency_id.name" t-esc="format_float(LineExtensionAmountDownpayment * 2 + record.amount_untaxed)" />
+                    </cac:AllowanceCharge>
+                </t>
+                <!-- Anticipo /-->               
+            </t>
+        </xpath>
+        <!-- CHANGES 2022 /-->
+    </template>
+
+    <template id="pe_ubl_2_1_credit_note">
+        <!-- BASE PE EDI-->
+        <CreditNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"
+                    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    xmlns:ccts="urn:un:unece:uncefact:documentation:2"
+                    xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                    xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+                    xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2"
+                    xmlns:sac="urn:sunat:names:specification:ubl:peru:schema:xsd:SunatAggregateComponents-1"
+                    xmlns:udt="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <t t-call="l10n_pe_edi.pe_ubl_2_1_refund_body"/>
+        </CreditNote>
+        <!-- BASE PE EDI-->
+    </template>
+</odoo>

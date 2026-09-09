@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record model="catalog.63" id="catalog_63_PUB">
+            <field name="code">PUB</field>
+            <field name="name">Bayóvar</field>
+            <field name="ubigeo">200801</field>
+            <field name="department">Piura</field>
+            <field name="province">Sechura</field>
+            <field name="district">Sechura</field>
+            <field name="address">Jorge Chávez 369 Paita</field>
+        </record>
+        <record model="catalog.63" id="catalog_63_CLL">
+            <field name="code">CLL</field>
+            <field name="name">Callao</field>
+            <field name="ubigeo">070101</field>
+            <field name="department">Lima</field>
+            <field name="province">Prov. Const. del Callao</field>
+            <field name="district">Callao</field>
+            <field name="address">Contralmirante Raygada Cdra. 1 Callao</field>
+        </record>
+        <record model="catalog.63" id="catalog_63_CON">
+            <field name="code">CON</field>
+            <field name="name">Conchán</field>
+            <field name="ubigeo">150119</field>
+            <field name="department">Lima</field>
+            <field name="province">Lima</field>
+            <field name="district">Lurín</field>
+            <field name="address">Carretera Panamericana Sur Km.26.5</field>
+        </record>
+        <record model="catalog.63" id="catalog_63_CHY">
+            <field name="code">CHY</field>
+            <field name="name">Chancay</field>
+            <field name="ubigeo">150605</field>
+            <field name="department">Lima</field>
+            <field name="province">Huaral</field>
+            <field name="district">Chancay</field>
+            <field name="address">Av. Roosevelt 680 Chancay</field>
+        </record>
+        <record model="catalog.63" id="catalog_63_CHM">
+            <field name="code">CHM</field>
+            <field name="name">Chimbote</field>
+            <field name="ubigeo">021801</field>
+            <field name="department">Ancash</field>
+            <field name="province">Santa</field>
+            <field name="district">Chimbote</field>
+            <field name="address">Av. Malecón Grau N°519 Chimbote</field>
+        </record>
+        <record model="catalog.63" id="catalog_63_EEN">
+            <field name="code">EEN</field>
+            <field name="name">Eten</field>
+            <field name="ubigeo">140113</field>
+            <field name="department">Lambayeque</field>
+            <field name="province">Chiclayo</field>
+            <field name="district">Reque</field>
+            <field name="address">Playa Lobos s/n </field>
+        </record>
+        <record model="catalog.63" id="catalog_63_HCO">
+            <field name="code">HCO</field>
+            <field name="name">Huacho</field>
+            <field name="ubigeo">150801</field>
+            <field name="department">Lima</field>
+            <field name="province">Huaura</field>
+            <field name="district">Huacho</field>
+            <field name="address">Luna Arrieta Cdra. 6</field>
+        </record>
+        <record model="catalog.63" id="catalog_63_HUY">
+            <field name="code">HUY</field>
+            <field name="name">Huarmey</field>
+            <field name="ubigeo">021101</field>
+            <field name="department">Ancash</field>
+            <field name="province">Huarmey</field>
+            <field name="district">Huarmey</field>
+            <field name="address">Puerto Punta de Lobitos</field>
+        </record>
+        <record model="catalog.63" id="catalog_63_ILQ">
+            <field name="code">ILQ</field>
+            <field name="name">Ilo</field>
+            <field name="ubigeo">180301</field>
+            <field name="department">Moquegua</field>
+            <field name="province">Ilo</field>
+            <field name="district">Ilo</field>
+            <field name="address">Calle Matará N°104</field>
+        </record>
+        <record model="catalog.63" id="catalog_63_IQT">
+            <field name="code">IQT</field>
+            <field name="name">Iquitos</field>
+            <field name="ubigeo">160101</field>
+            <field name="department">Loreto</field>
+            <field name="province">Maynas</field>
+            <field name="district">Iquitos</field>
+            <field name="address">Av. La Marina N°1383</field>
+        </record>
+        <record model="catalog.63" id="catalog_63_MRI">
+            <field name="code">MRI</field>
+            <field name="name">Matarani</field>
+            <field name="ubigeo">040701</field>
+            <field name="department">Arequipa</field>
+            <field name="province">Islay</field>
+            <field name="district">Mollendo</field>
+            <field name="address">Terminal Portuario Matarani S/N</field>
+        </record>
+        <record model="catalog.63" id="catalog_63_PAI">
+            <field name="code">PAI</field>
+            <field name="name">Paita</field>
+            <field name="ubigeo">200501</field>
+            <field name="department">Piura</field>
+            <field name="province">Paita</field>
+            <field name="district">Paita</field>
+            <field name="address">Jirón Ferrocarril N°127</field>
+        </record>
+        <record model="catalog.63" id="catalog_63_PIO">
+            <field name="code">PIO</field>
+            <field name="name">Pisco</field>
+            <field name="ubigeo">110505</field>
+            <field name="department">Ica</field>
+            <field name="province">Pisco</field>
+            <field name="district">Paracas</field>
+            <field name="address">Carretera Pisco-Paracas Km.11.5</field>
+        </record>
+        <record model="catalog.63" id="catalog_63_PCL">
+            <field name="code">PCL</field>
+            <field name="name">Pucallpa</field>
+            <field name="ubigeo">250101</field>
+            <field name="department">Ucayali</field>
+            <field name="province">Coronel portillo</field>
+            <field name="district">Callería</field>
+            <field name="address">Jirón 2 de Mayo N°150</field>
+        </record>
+        <record model="catalog.63" id="catalog_63_PUN">
+            <field name="code">PUN</field>
+            <field name="name">Puno</field>
+            <field name="ubigeo">210101</field>
+            <field name="department">Puno</field>
+            <field name="province">Puno</field>
+            <field name="district">Puno</field>
+            <field name="address">Av. El Sol Puno</field>
+        </record>
+        <record model="catalog.63" id="catalog_63_SVY">
+            <field name="code">SVY</field>
+            <field name="name">Salaverry</field>
+            <field name="ubigeo">130109</field>
+            <field name="department">La libertad </field>
+            <field name="province">Trujillo</field>
+            <field name="district">Salaverry</field>
+            <field name="address">Calle Córdova S/N</field>
+        </record>
+        <record model="catalog.63" id="catalog_63_SNX">
+            <field name="code">SNX</field>
+            <field name="name">San Nicolas</field>
+            <field name="ubigeo">110304</field>
+            <field name="department">Ica</field>
+            <field name="province">Nazca</field>
+            <field name="district">Marcona</field>
+            <field name="address">Complejo Metalúrgico de San Nicolás </field>
+        </record>
+        <record model="catalog.63" id="catalog_63_SUP">
+            <field name="code">SUP</field>
+            <field name="name">Supe</field>
+            <field name="ubigeo">150204</field>
+            <field name="department">Lima</field>
+            <field name="province">Barranca</field>
+            <field name="district">Supe</field>
+            <field name="address">Calle Callao N°445-460</field>
+        </record>
+        <record model="catalog.63" id="catalog_63_TYL">
+            <field name="code">TYL</field>
+            <field name="name">Talara</field>
+            <field name="ubigeo">200701</field>
+            <field name="department">Piura</field>
+            <field name="province">Talara</field>
+            <field name="district">Pariñas</field>
+            <field name="address">Prolongación Av. G-2 (Área Administrativa)</field>
+        </record>
+        <record model="catalog.63" id="catalog_63_YMS">
+            <field name="code">YMS</field>
+            <field name="name">Yurimaguas</field>
+            <field name="ubigeo">160201</field>
+            <field name="department">Loreto</field>
+            <field name="province">Alto amazonas</field>
+            <field name="district">Yurimaguas</field>
+            <field name="address">Calle Mariscal Castilla N°1000</field>
+        </record>
+        <record model="catalog.63" id="catalog_63_ZOR">
+            <field name="code">ZOR</field>
+            <field name="name">Zorritos</field>
+            <field name="ubigeo">240103</field>
+            <field name="department">Tumbes</field>
+            <field name="province">Tumbes</field>
+            <field name="district">La cruz</field>
+            <field name="address">Puerto Pizarro La Cruz</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_AQP">
+            <field name="code">AQP</field>
+            <field name="name">Rodríguez Ballón</field>
+            <field name="ubigeo">040104</field>
+            <field name="department">Arequipa</field>
+            <field name="province">Arequipa</field>
+            <field name="district">Cerro colorado</field>
+            <field name="address">Avenida Aeropuerto S/N</field>
+            <field name="type_aeroport">internacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_ANS">
+            <field name="code">ANS</field>
+            <field name="name">Andahuaylas</field>
+            <field name="ubigeo">030201</field>
+            <field name="department">Apurímac</field>
+            <field name="province">Andahuaylas</field>
+            <field name="district">Andahuaylas</field>
+            <field name="address">A 17.5 km de Andahuaylas Apurímac</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_ATA">
+            <field name="code">ATA</field>
+            <field name="name">Comandante FAP Germán Arias Graciani</field>
+            <field name="ubigeo">020604</field>
+            <field name="department">Ancash</field>
+            <field name="province">Carhuaz</field>
+            <field name="district">Anta</field>
+            <field name="address">Norte de Huaraz - Anta - Carhuaz - Ancash</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_AYP">
+            <field name="code">AYP</field>
+            <field name="name">Coronel FAP Alfredo Mendívil Duarte</field>
+            <field name="ubigeo">050113</field>
+            <field name="department">Ayacucho</field>
+            <field name="province">Huamanga</field>
+            <field name="district">Tambillo</field>
+            <field name="address">Amancaes 961, Ayacucho</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_CJA">
+            <field name="code">CJA</field>
+            <field name="name">Mayor Gral. FAP Armando Revoredo Iglesias</field>
+            <field name="ubigeo">060108</field>
+            <field name="department">Cajamarca</field>
+            <field name="province">Cajamarca</field>
+            <field name="district">Los Baños del Inca</field>
+            <field name="address">Av. Hoyos Rubio 1804, Cajamarca</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_CHM">
+            <field name="code">CHM</field>
+            <field name="name">Tnte. FAP Jaime De Montruil M</field>
+            <field name="ubigeo">021809</field>
+            <field name="department">Ancash</field>
+            <field name="province">Santa</field>
+            <field name="district">Nuevo Chimbote</field>
+            <field name="address">Panamericana sur Km. 425, Nuevo Chimbote</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_CUZ">
+            <field name="code">CUZ</field>
+            <field name="name">Alejandro Velazco Astete</field>
+            <field name="ubigeo">080108</field>
+            <field name="department">Cusco</field>
+            <field name="province">Cusco</field>
+            <field name="district">Wánchaq</field>
+            <field name="address">Avenida Velasco Astete s/n</field>
+            <field name="type_aeroport">internacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_CHH">
+            <field name="code">CHH</field>
+            <field name="name">Chachapoyas</field>
+            <field name="ubigeo">010101</field>
+            <field name="department">Amazonas</field>
+            <field name="province">Chachapoyas</field>
+            <field name="district">Chachapoyas</field>
+            <field name="address">Av. Aviación 662, Chachapoyas</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_CIX">
+            <field name="code">CIX</field>
+            <field name="name">Capitán FAP José Quiñones G.</field>
+            <field name="ubigeo">140101</field>
+            <field name="department">Lambayeque</field>
+            <field name="province">Chiclayo</field>
+            <field name="district">Chiclayo</field>
+            <field name="address">Av. Fitzcarrald s/n</field>
+            <field name="type_aeroport">internacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_HUU">
+            <field name="code">HUU</field>
+            <field name="name">Alférez FAP David Figueroa Fernandini</field>
+            <field name="ubigeo">100101</field>
+            <field name="department">Huánuco</field>
+            <field name="province">Huánuco</field>
+            <field name="district">Huánuco</field>
+            <field name="address">Jirón Tarma 376, Huánuco</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_ILO">
+            <field name="code">ILO</field>
+            <field name="name">Ilo</field>
+            <field name="ubigeo">180301</field>
+            <field name="department">Moquegua</field>
+            <field name="province">Ilo</field>
+            <field name="district">Ilo</field>
+            <field name="address">Carretera Costanera Km 7 Pampa de Palo Ilo</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_IQT">
+            <field name="code">IQT</field>
+            <field name="name">Coronel FAP Francisco Secada Vignetta </field>
+            <field name="ubigeo">160101</field>
+            <field name="department">Loreto</field>
+            <field name="province">Maynas</field>
+            <field name="district">Iquitos</field>
+            <field name="address">Av. Abelardo Quiñones Km 6 Iquitos Loreto</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_JAE">
+            <field name="code">JAE</field>
+            <field name="name">Jaén - Shumba </field>
+            <field name="ubigeo">060802</field>
+            <field name="department">Cajamarca</field>
+            <field name="province">Jaén</field>
+            <field name="district">Bellavista</field>
+            <field name="address">Distrito de Bellavista, provincia de Jaén Cajamarca - Perú </field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_JJI">
+            <field name="code">JJI</field>
+            <field name="name">Juanjuí</field>
+            <field name="ubigeo">220601</field>
+            <field name="department">San Martín</field>
+            <field name="province">Mariscal Cáceres</field>
+            <field name="district">Juanjuí</field>
+            <field name="address">Provincia Mariscal Cáceres - Juanjui a 1 km de la ciudad.</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_JUL">
+            <field name="code">JUL</field>
+            <field name="name">Manco Cápac</field>
+            <field name="ubigeo">211101</field>
+            <field name="department">Puno</field>
+            <field name="province">San Román</field>
+            <field name="district">Juliaca</field>
+            <field name="address">Avenida Aviación S/n. Juliaca - Puno</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_JAU">
+            <field name="code">JAU</field>
+            <field name="name">Francisco Carlé</field>
+            <field name="ubigeo">120430</field>
+            <field name="department">Junín</field>
+            <field name="province">Jauja</field>
+            <field name="district">Sausa</field>
+            <field name="address">Av. Francisco Carle S/N, Jauja</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_LIM">
+            <field name="code">LIM</field>
+            <field name="name">Internacional Jorge Chávez</field>
+            <field name="ubigeo">070101</field>
+            <field name="department">Lima</field>
+            <field name="province">Prov. Const. Del callao</field>
+            <field name="district">Callao</field>
+            <field name="address">Av. Elmer Faucett s/n </field>
+            <field name="type_aeroport">internacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_MBP">
+            <field name="code">MBP</field>
+            <field name="name">Moyobamba</field>
+            <field name="ubigeo">220101</field>
+            <field name="department">San Martín</field>
+            <field name="province">Moyobamba</field>
+            <field name="district">Moyobamba</field>
+            <field name="address">Jr. Dos de Mayo cdra. 17</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_PIO">
+            <field name="code">PIO</field>
+            <field name="name">Capitán FAP Renán Elías Olivera</field>
+            <field name="ubigeo">110506</field>
+            <field name="department">Ica</field>
+            <field name="province">Pisco</field>
+            <field name="district">San Andrés</field>
+            <field name="address">Ica 715</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_PIU">
+            <field name="code">PIU</field>
+            <field name="name">Capitán FAP Carlos Concha Iberico</field>
+            <field name="ubigeo">200104</field>
+            <field name="department">Piura</field>
+            <field name="province">Piura</field>
+            <field name="district">Castilla</field>
+            <field name="address">Córpac 247 Castilla Piura</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_PCL">
+            <field name="code">PCL</field>
+            <field name="name">Capitán FAP David Abensur Rengifo</field>
+            <field name="ubigeo">250105</field>
+            <field name="department">Ucayali</field>
+            <field name="province">Coronel portillo</field>
+            <field name="district">Yarinacocha</field>
+            <field name="address">Carretera Federico Basadre Km 5.5, Coronel Portillo, Pucallpa</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_PEM">
+            <field name="code">PEM</field>
+            <field name="name">Padre Aldamiz</field>
+            <field name="ubigeo">170101</field>
+            <field name="department">Madre de dios</field>
+            <field name="province">Tambopata</field>
+            <field name="district">Tambopata</field>
+            <field name="address">30C 579, Carretera Pastora las Joyas Km. 7</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_RIJ">
+            <field name="code">RIJ</field>
+            <field name="name">Juan Simons Vela - Rioja </field>
+            <field name="ubigeo">220801</field>
+            <field name="department">San Martín</field>
+            <field name="province">Rioja</field>
+            <field name="district">Rioja</field>
+            <field name="address">Jirón Teobaldo López 1402, Rioja</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_TCQ">
+            <field name="code">TCQ</field>
+            <field name="name">Coronel FAP Carlos Ciriani Santa Rosa</field>
+            <field name="ubigeo">230101</field>
+            <field name="department">Tacna</field>
+            <field name="province">Tacna</field>
+            <field name="district">Tacna</field>
+            <field name="address">Carretera Panamericana Sur s/n, Tacna - Tacna.</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_TYL">
+            <field name="code">TYL</field>
+            <field name="name">Capitán FAP Montes Arias</field>
+            <field name="ubigeo">200701</field>
+            <field name="department">Piura</field>
+            <field name="province">Talara</field>
+            <field name="district">Pariñas</field>
+            <field name="address">Talara Alta s/n Pariñas - Piura</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_TPP">
+            <field name="code">TPP</field>
+            <field name="name">Cadete FAP Guillermo del Castillo Paredes</field>
+            <field name="ubigeo">220901</field>
+            <field name="department">San Martín</field>
+            <field name="province">San Martín</field>
+            <field name="district">Tarapoto</field>
+            <field name="address">Avenida Aviación, Tarapoto</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_TIG">
+            <field name="code">TIG</field>
+            <field name="name">Tingo María</field>
+            <field name="ubigeo">100601</field>
+            <field name="department">Huánuco</field>
+            <field name="province">Leoncio prado</field>
+            <field name="district">Rupa-Rupa</field>
+            <field name="address">Av. José Abelardo Quiñones, Tinga Maria</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_TRU">
+            <field name="code">TRU</field>
+            <field name="name">Capitán FAP Carlos Martínez Pinillos</field>
+            <field name="ubigeo">130104</field>
+            <field name="department">La libertad</field>
+            <field name="province">Trujillo</field>
+            <field name="district">Huanchaco</field>
+            <field name="address">Ruta al Aeropuerto 104, Huanchaco</field>
+            <field name="type_aeroport">internacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_TBP">
+            <field name="code">TBP</field>
+            <field name="name">Capitán FAP Pedro Canga Rodríguez</field>
+            <field name="ubigeo">240101</field>
+            <field name="department">Tumbes</field>
+            <field name="province">Tumbes</field>
+            <field name="district">Tumbes</field>
+            <field name="address">Altura del km 1276 Carretera Panamericana Norte - Zarumilla Tumbes</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_ATG">
+            <field name="code">ATG</field>
+            <field name="name">Atalaya - Tnte. Gral. Gerardo Pérez Pinedo</field>
+            <field name="ubigeo">250201</field>
+            <field name="department">Ucayali</field>
+            <field name="province">Atalaya</field>
+            <field name="district">Raymondi</field>
+            <field name="address">Calle Rioja 659, Atalaya</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+        <record model="catalog.64" id="catalog_64_YMS">
+            <field name="code">YMS</field>
+            <field name="name">Moisés Benzaquen Rengifo</field>
+            <field name="ubigeo">160201</field>
+            <field name="department">Loreto</field>
+            <field name="province">Alto amazonas</field>
+            <field name="district">Yurimaguas</field>
+            <field name="address">Libertad 802, Yurimaguas</field>
+            <field name="type_aeroport">nacional</field>
+        </record>
+    </data>
+</odoo>
+<!-- NEW -->

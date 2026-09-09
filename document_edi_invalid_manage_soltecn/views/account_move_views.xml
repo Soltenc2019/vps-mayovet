@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_form_invalid_edi_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.invalid.edi.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account_edi.view_move_form_inherit" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='edi_error_count']" position="after">
+                    <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
+                        invisible = "edi_error_count == '0' and edi_blocking_level != 'invalid'">
+                        <!-- attrs="{'invisible': ['|', ('edi_error_count', '=', 0), ('edi_blocking_level', '!=', 'invalid')]}"> -->
+                        <div class="o_row">
+                            <field name="edi_error_message" />
+                        </div>
+                    </div>
+                </xpath>
+                <!-- <xpath expr="//button[@name='action_retry_edi_documents_error']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('edi_blocking_level', '=', 'invalid')]}</attribute>
+                </xpath> -->
+            </field>
+        </record>
+    </data>
+</odoo>

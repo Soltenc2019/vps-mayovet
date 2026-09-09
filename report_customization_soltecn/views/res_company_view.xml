@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_form_company_inherited" model="ir.ui.view">
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+            <xpath expr="//page[1]" position="after">
+               <page string="Aspecto reporte" groups="base.group_no_one">
+               <!-- , base.group_erp_manager -->
+                    <group>
+                        <group>
+                            <field name="max_column_logo"/>
+                            <field name="space_body_header" invisible="1"/>
+                            <field name="padding_top_layout" invisible="1"/>
+                        </group>                        
+                    </group>    
+                </page>
+            </xpath>            
+            </field>
+        </record>
+    </data>
+</odoo>

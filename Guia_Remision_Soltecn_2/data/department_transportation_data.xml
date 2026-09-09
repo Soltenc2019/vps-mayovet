@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record model="hr.department" id="transportation_department">
+            <field name="name">Transporte</field>
+        </record>
+    </data>
+</odoo>

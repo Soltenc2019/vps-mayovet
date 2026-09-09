@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_purchaseorder_document" inherit_id="purchase.report_purchaseorder_document">
+        <xpath expr="//p[@t-field='o.notes']" position="replace">
+            <p t-if="o.notes" style="page-break-after:always;"/>
+            <div t-if="o.notes">
+                <div>
+                    <span class="text-nowrap">
+                        <strong>Términos y condiciones</strong>
+                    </span>
+                </div>
+                <div>
+                    <span class="text-wrap" t-esc="o.notes"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='stock']//block[@name='operations_setting_container']" position="after">
+                <h2>SUNAT</h2>
+                <div class="row mt16 o_settings_container" name="conf_specify_weight">
+                    <div class="col-12 col-lg-6 o_setting_box" id="conf_specify_weight">
+                        <div class="o_setting_left_pane">
+                            <field name="specify_weight"/>
+                        </div>
+                        <div class="o_setting_right_pane" id="conf_specify_weight">
+                            <label for="specify_weight"/>
+                            <div class="text-muted" name="specify_weight">
+                                Verdadero: El peso de los productos transportados es calculado según peso especificado de productos. Falso: El peso es especificado manualmente.
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-12 col-lg-6 o_setting_box" id="conf_picking_type_in_package_default_id">
+                        <div class="o_setting_right_pane">
+                            <label for="picking_type_in_package_default_id"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <div class="text-muted">
+                                Tipo picking por defecto en autocreación de paquetes
+                            </div>
+                            <div class="text-muted">
+                                <field name="picking_type_in_package_default_id"/>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="row mt16 o_settings_container" name="conf_specify_weight_by_bultos_paletas">
+                    <div class="col-12 col-lg-6 o_setting_box" id="conf_specify_weight_by_bultos_paletas">
+                        <div class="o_setting_left_pane">
+                            <field name="specify_weight_by_bultos_paletas"/>
+                        </div>
+                        <div class="o_setting_right_pane" id="conf_specify_weight_by_bultos_paletas">
+                            <label for="specify_weight_by_bultos_paletas"/>
+                            <div class="text-muted" name="specify_weight_by_bultos_paletas">
+                                Mostrar peso de bultos en reporte
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="row mt16 o_settings_container" name="conf_group_by_bultos_paletas">
+                    <div class="col-12 col-lg-6 o_setting_box" id="conf_group_by_bultos_paletas">
+                        <div class="o_setting_left_pane">
+                            <field name="group_by_bultos_paletas"/>
+                        </div>
+                        <div class="o_setting_right_pane" id="conf_group_by_bultos_paletas">
+                            <label for="group_by_bultos_paletas"/>
+                            <div class="text-muted" name="group_by_bultos_paletas">
+                                Agrupamiento de productos en bultos o paletas
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </xpath>
+        </field>
+    </record>
+</odoo>

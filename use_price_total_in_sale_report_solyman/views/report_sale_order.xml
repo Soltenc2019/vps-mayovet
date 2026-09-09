@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template 
+        id="inherit_report_saleorder_document"
+        inherit_id="sale.report_saleorder_document"
+    >
+        <xpath expr="//td[@name='td_subtotal']" position="replace">
+            <td t-if="not line.is_downpayment" name="td_subtotal" class="text-end o_price_total">
+                <span t-field="line.price_total">27.00</span>
+            </td>
+        </xpath>  
+    </template>
+</odoo>

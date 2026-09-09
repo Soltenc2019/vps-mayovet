@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_account_journal_form" model="ir.ui.view">
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr='//field[@name="company_id"]' position='after'>
+                <field name="sucursal_address" options="{'no_create': True}"/>
+                <field name="custom_message"
+                    invisible="type != 'sale' and l10n_latam_use_documents == False"/>
+                <!--modifiers="{'invisible': [('type', '!=', 'sale'), ('l10n_latam_use_documents', '=', False)]}"/>-->
+            </xpath>
+            <!-- <xpath expr='//field[@name="refund_sequence"]' position='after'>
+                <field name="default_l10n_pe_edi_legend">
+            </xpath> -->
+        </field>
+    </record>
+</odoo>

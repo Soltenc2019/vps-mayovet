@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>	
+    <!-- NEW -->
+	<record id="view_related_document_tree" model="ir.ui.view">
+		<field name="name">Documentos relacionados</field>
+		<field name="model">related.document</field>
+		<field name="arch" type="xml">
+			<tree string="Documentos relacionados">
+				<field name="stock_picking" invisible="1"/>
+				<field name="related_document_number"/>
+				<field name="related_document_type"/>
+			</tree>
+		</field>
+	</record>
+	<record id="view_related_document_form" model="ir.ui.view">
+		<field name="name">Documentos relacionados</field>
+		<field name="model">related.document</field>
+		<field name="arch" type="xml">
+			<form string="Documentos relacionados">
+				<group>
+					<group>
+						<!-- <field name="stock_picking" invisible="1"/> -->
+                        <field name="related_document_number"/>
+                        <field name="related_document_type"/>
+					</group>
+				</group>
+			</form>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="related_document">
+		<field name="name">Documentos relacionados</field>
+		<field name="model">related.document</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+</odoo>

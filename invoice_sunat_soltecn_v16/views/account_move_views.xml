@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_form" model="ir.ui.view">
+            <field name="name">account.move.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <!-- Anticipo -->
+                <xpath expr="//group[@id='header_left_group']" position="inside">
+                    <field name="reference_downpayments_invoice" widget="many2many_tags"/>
+                </xpath>
+                <!-- Anticipo /-->
+                <!-- Retention -->
+                <xpath expr="//div[@name='journal_div']" position="after">
+                    <field name="l10n_pe_edi_retention_type_id"
+                        invisible="move_type not in ('out_invoice', 'out_receipt')"
+                        readonly="state != 'draft'"
+                    />
+                </xpath>
+                <!-- Retention /-->
+                <xpath expr="//field[@name='tax_totals']" position="after">
+                    <!-- Detraccion -->
+                    <field name="l10n_pe_edi_base_detraction"
+                        invisible="l10n_pe_edi_operation_type not in ('1001','1002','1003','1004')"
+                    />  
+                    <field name="l10n_pe_edi_total_detraction" 
+                        invisible="l10n_pe_edi_operation_type not in ('1001','1002','1003','1004')"
+                    />
+                    <!-- Detraccion /-->
+                    <!-- Retention -->
+                    <field name="l10n_pe_edi_base_retention" 
+                        invisible="not l10n_pe_edi_retention_type_id"
+                    />
+                    <field name="l10n_pe_edi_total_retention" 
+                        invisible="not l10n_pe_edi_retention_type_id"
+                    />
+                    <!-- Retention /-->
+                    <field name="currency_id_name" invisible="1"/>
+                    <!-- Detraccion -->
+                    <field name="l10n_pe_edi_porcentage_detraction" invisible="1"/>
+
+                    <field name="l10n_pe_edi_total_detraction_signed_not_rounded" string="Total detracción soles" 
+                        invisible="l10n_pe_edi_operation_type not in ('1001','1002','1003','1004') or currency_id_name == 'PEN'"
+                    />
+
+                    <field name="l10n_pe_edi_total_detraction_signed" string="Total detracción soles redondeo"
+                        invisible="l10n_pe_edi_operation_type not in ('1001','1002','1003','1004')"
+                    />
+
+                    <field name="l10n_pe_edi_amount_total_detraction"
+                        invisible="l10n_pe_edi_operation_type not in ('1001','1002','1003','1004')"
+                    />
+                    <!-- Detraccion /-->
+                    <!-- Retention -->
+                    <field name="l10n_pe_edi_total_retention_signed" string="Total retención soles"
+                        invisible="not l10n_pe_edi_retention_type_id or currency_id_name == 'PEN'"
+                    />
+                    <field name="l10n_pe_edi_amount_total_retention" 
+                        invisible="not l10n_pe_edi_retention_type_id"
+                    />
+                    <!-- Retention /-->
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

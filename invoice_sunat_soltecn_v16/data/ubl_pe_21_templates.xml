@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Factura-->
+    <template id="ubl_pe_21_InvoiceType" inherit_id="account_edi_ubl_cii.ubl_21_InvoiceType" primary="True">
+
+        <xpath expr="//*[local-name()='OrderReference']" position="replace">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <t t-set="downpayments_vals" t-value="vals.get('downpayments_vals', False)"/>
+
+                    <!--ANTICIPO-->
+                    <t t-if="not downpayments_vals">
+                        <cac:OrderReference>
+                            <cbc:ID t-out="vals.get('order_reference')"/>
+                            <cbc:SalesOrderID t-out="vals.get('sales_order_id')"/>
+                        </cac:OrderReference>                                             
+                    </t>
+            </t>
+        </xpath>        
+
+        <xpath expr="//*[local-name()='DocumentCurrencyCode']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <t t-set="downpayments_vals" t-value="vals.get('downpayments_vals', False)"/>
+
+                    <!--ANTICIPO-->
+                    <t t-if="downpayments_vals">
+                        <t 
+                            t-set="aditional_document_vals" 
+                            t-value="downpayments_vals.get('aditional_document_vals', False)"
+                        />
+                        <cac:AdditionalDocumentReference t-foreach="aditional_document_vals" t-as="downpayment">
+                            <cbc:ID t-esc="downpayment.get('id')" />
+                            <cbc:DocumentTypeCode t-esc="downpayment.get('document_type')"/>
+                            <cbc:DocumentStatusCode t-esc="downpayment.get('index')"/>
+                            <cac:IssuerParty>
+                                <cac:PartyIdentification>
+                                    <cbc:ID 
+                                        t-att-schemeID="downpayment.get('party_identification_code')"
+                                        t-esc="downpayment.get('party_identification_vat')"
+                                    />
+                                </cac:PartyIdentification>
+                            </cac:IssuerParty>
+                        </cac:AdditionalDocumentReference>                        
+                    </t>
+            </t>
+        </xpath>
+
+        <xpath expr="//*[local-name()='PaymentTerms']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+
+                <t t-set="downpayments_vals" t-value="vals.get('downpayments_vals', False)"/>
+
+                <!--ANTICIPO-->
+                <t t-if="downpayments_vals">
+                    <t t-set="prepaid_payment_vals" t-value="downpayments_vals.get('prepaid_payment_vals', False)"/>
+                    <cac:PrepaidPayment t-foreach="prepaid_payment_vals" t-as="downpayment">
+                        <cbc:ID t-esc="downpayment.get('index')"/>
+                        <cbc:PaidAmount  
+                            t-att-currencyID="downpayment.get('currency_name')" 
+                            t-esc="downpayment.get('amount_total')"
+                        />
+                    </cac:PrepaidPayment>
+                </t>
+                <!--ANTICIPO-->
+
+                <!--retencion-->
+                <t t-set="retention_vals" t-value="vals.get('retention_vals', False)"/>
+                <t t-if="retention_vals">
+                    <cac:AllowanceCharge>
+                        <cbc:ChargeIndicator t-out="retention_vals.get('charge_indicator')"/>
+                        <cbc:AllowanceChargeReasonCode
+                            t-out="retention_vals.get('allowance_charge_reason_code')"/>
+                        <cbc:MultiplierFactorNumeric t-out="retention_vals.get('multiplier_factor')"/>
+                        <cbc:Amount
+                            t-att-currencyID="retention_vals.get('currency_name')"
+                            t-out="format_float(retention_vals.get('amount'), retention_vals.get('currency_dp'))"/>
+                        <cbc:BaseAmount
+                            t-att-currencyID="retention_vals.get('currency_name')"
+                            t-out="format_float(retention_vals.get('base_amount'), retention_vals.get('currency_dp'))"/>
+                    </cac:AllowanceCharge>
+                </t>
+                <!--retencion-->
+
+                <!--ANTICIPO-->
+                
+                <t t-if="downpayments_vals">
+                    <!-- <t t-set="LineExtensionAmountDownpayment" t-value="0"/>
+                    <t t-foreach="record.reference_downpayments_invoice" t-as="downpayment">
+                        <t t-set="LineExtensionAmountDownpayment" t-value="LineExtensionAmountDownpayment + downpayment.amount_untaxed"/>
+                    </t> -->
+                    <cac:AllowanceCharge>
+                        <cbc:ChargeIndicator t-out="downpayments_vals.get('charge_indicator')"/>
+                        <cbc:AllowanceChargeReasonCode
+                            t-out="downpayments_vals.get('allowance_charge_reason_code')"/>
+                        <!-- <cbc:Amount t-att-currencyID="record.currency_id.name" t-esc="format_float(LineExtensionAmountDownpayment)" />
+                        <cbc:BaseAmount t-att-currencyID="record.currency_id.name" t-esc="format_float(LineExtensionAmountDownpayment * 2 + record.amount_untaxed)" /> -->
+                        <cbc:Amount
+                            t-att-currencyID="downpayments_vals.get('currency_name')"
+                            t-out="format_float(downpayments_vals.get('amount'), downpayments_vals.get('currency_dp'))"/>
+                        <cbc:BaseAmount
+                            t-att-currencyID="downpayments_vals.get('currency_name')"
+                            t-out="format_float(downpayments_vals.get('base_amount'), downpayments_vals.get('currency_dp'))"/>
+                    </cac:AllowanceCharge>
+                </t>
+                <!--ANTICIPO-->
+            </t>
+        </xpath>
+    </template>
+
+    <!--Nota de Credito-->
+    <template id="ubl_pe_21_CreditNoteType" inherit_id="account_edi_ubl_cii.ubl_21_CreditNoteType" primary="True">
+
+        <xpath expr="//*[local-name()='OrderReference']" position="replace">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <t t-set="downpayments_vals" t-value="vals.get('downpayments_vals', False)"/>
+
+                    <!--ANTICIPO-->
+                    <t t-if="not downpayments_vals">
+                        <cac:OrderReference>
+                            <cbc:ID t-out="vals.get('order_reference')"/>
+                            <cbc:SalesOrderID t-out="vals.get('sales_order_id')"/>
+                        </cac:OrderReference>                                             
+                    </t>
+            </t>
+        </xpath>
+        
+        <xpath expr="//*[local-name()='DocumentCurrencyCode']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <t t-set="downpayments_vals" t-value="vals.get('downpayments_vals', False)"/>
+
+                    <!--ANTICIPO-->
+                    <t t-if="downpayments_vals">
+                        <t 
+                            t-set="aditional_document_vals" 
+                            t-value="downpayments_vals.get('aditional_document_vals', False)"
+                        />
+                        <cac:AdditionalDocumentReference t-foreach="aditional_document_vals" t-as="downpayment">
+                            <cbc:ID t-esc="downpayment.get('id')" />
+                            <cbc:DocumentTypeCode t-esc="downpayment.get('document_type')"/>
+                            <cbc:DocumentStatusCode t-esc="downpayment.get('index')"/>
+                            <cac:IssuerParty>
+                                <cac:PartyIdentification>
+                                    <cbc:ID 
+                                        t-att-schemeID="downpayment.get('party_identification_code')"
+                                        t-esc="downpayment.get('party_identification_vat')"
+                                    />
+                                </cac:PartyIdentification>
+                            </cac:IssuerParty>
+                        </cac:AdditionalDocumentReference>                        
+                    </t>
+            </t>
+        </xpath>
+
+        <xpath expr="//*[local-name()='PaymentTerms']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+
+                <t t-set="downpayments_vals" t-value="vals.get('downpayments_vals', False)"/>
+
+                <!--ANTICIPO-->
+                <t t-if="downpayments_vals">
+                    <t t-set="prepaid_payment_vals" t-value="downpayments_vals.get('prepaid_payment_vals', False)"/>
+                    <cac:PrepaidPayment t-foreach="prepaid_payment_vals" t-as="downpayment">
+                        <cbc:ID t-esc="downpayment.get('index')"/>
+                        <cbc:PaidAmount  
+                            t-att-currencyID="downpayment.get('currency_name')" 
+                            t-esc="downpayment.get('amount_total')"
+                        />
+                    </cac:PrepaidPayment>
+                </t>
+                <!--ANTICIPO-->
+
+                <!--retencion-->
+                <t t-set="retention_vals" t-value="vals.get('retention_vals', False)"/>
+                <t t-if="retention_vals">
+                    <cac:AllowanceCharge>
+                        <cbc:ChargeIndicator t-out="retention_vals.get('charge_indicator')"/>
+                        <cbc:AllowanceChargeReasonCode
+                            t-out="retention_vals.get('allowance_charge_reason_code')"/>
+                        <cbc:MultiplierFactorNumeric t-out="retention_vals.get('multiplier_factor')"/>
+                        <cbc:Amount
+                            t-att-currencyID="retention_vals.get('currency_name')"
+                            t-out="format_float(retention_vals.get('amount'), retention_vals.get('currency_dp'))"/>
+                        <cbc:BaseAmount
+                            t-att-currencyID="retention_vals.get('currency_name')"
+                            t-out="format_float(retention_vals.get('base_amount'), retention_vals.get('currency_dp'))"/>
+                    </cac:AllowanceCharge>
+                </t>
+                <!--retencion-->
+
+                <!--ANTICIPO-->
+                
+                <t t-if="downpayments_vals">
+                    <!-- <t t-set="LineExtensionAmountDownpayment" t-value="0"/>
+                    <t t-foreach="record.reference_downpayments_invoice" t-as="downpayment">
+                        <t t-set="LineExtensionAmountDownpayment" t-value="LineExtensionAmountDownpayment + downpayment.amount_untaxed"/>
+                    </t> -->
+                    <cac:AllowanceCharge>
+                        <cbc:ChargeIndicator t-out="downpayments_vals.get('charge_indicator')"/>
+                        <cbc:AllowanceChargeReasonCode
+                            t-out="downpayments_vals.get('allowance_charge_reason_code')"/>
+                        <!-- <cbc:Amount t-att-currencyID="record.currency_id.name" t-esc="format_float(LineExtensionAmountDownpayment)" />
+                        <cbc:BaseAmount t-att-currencyID="record.currency_id.name" t-esc="format_float(LineExtensionAmountDownpayment * 2 + record.amount_untaxed)" /> -->
+                        <cbc:Amount
+                            t-att-currencyID="downpayments_vals.get('currency_name')"
+                            t-out="format_float(downpayments_vals.get('amount'), downpayments_vals.get('currency_dp'))"/>
+                        <cbc:BaseAmount
+                            t-att-currencyID="downpayments_vals.get('currency_name')"
+                            t-out="format_float(downpayments_vals.get('base_amount'), downpayments_vals.get('currency_dp'))"/>
+                    </cac:AllowanceCharge>
+                </t>
+                <!--ANTICIPO-->
+            </t>
+        </xpath>
+    </template>
+
+    <!--Nota de Debito-->
+    <template id="ubl_pe_21_DebitNoteType" inherit_id="account_edi_ubl_cii.ubl_21_DebitNoteType" primary="True">
+
+        <xpath expr="//*[local-name()='OrderReference']" position="replace">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <t t-set="downpayments_vals" t-value="vals.get('downpayments_vals', False)"/>
+
+                    <!--ANTICIPO-->
+                    <t t-if="not downpayments_vals">
+                        <cac:OrderReference>
+                            <cbc:ID t-out="vals.get('order_reference')"/>
+                            <cbc:SalesOrderID t-out="vals.get('sales_order_id')"/>
+                        </cac:OrderReference>                                             
+                    </t>
+            </t>
+        </xpath>
+        
+        <xpath expr="//*[local-name()='DocumentCurrencyCode']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <t t-set="downpayments_vals" t-value="vals.get('downpayments_vals', False)"/>
+
+                    <!--ANTICIPO-->
+                    <t t-if="downpayments_vals">
+                        <t 
+                            t-set="aditional_document_vals" 
+                            t-value="downpayments_vals.get('aditional_document_vals', False)"
+                        />
+                        <cac:AdditionalDocumentReference t-foreach="aditional_document_vals" t-as="downpayment">
+                            <cbc:ID t-esc="downpayment.get('id')" />
+                            <cbc:DocumentTypeCode t-esc="downpayment.get('document_type')"/>
+                            <cbc:DocumentStatusCode t-esc="downpayment.get('index')"/>
+                            <cac:IssuerParty>
+                                <cac:PartyIdentification>
+                                    <cbc:ID 
+                                        t-att-schemeID="downpayment.get('party_identification_code')"
+                                        t-esc="downpayment.get('party_identification_vat')"
+                                    />
+                                </cac:PartyIdentification>
+                            </cac:IssuerParty>
+                        </cac:AdditionalDocumentReference>                        
+                    </t>
+            </t>
+        </xpath>
+
+        <xpath expr="//*[local-name()='PaymentTerms']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+
+                <t t-set="downpayments_vals" t-value="vals.get('downpayments_vals', False)"/>
+
+                <!--ANTICIPO-->
+                <t t-if="downpayments_vals">
+                    <t t-set="prepaid_payment_vals" t-value="downpayments_vals.get('prepaid_payment_vals', False)"/>
+                    <cac:PrepaidPayment t-foreach="prepaid_payment_vals" t-as="downpayment">
+                        <cbc:ID t-esc="downpayment.get('index')"/>
+                        <cbc:PaidAmount  
+                            t-att-currencyID="downpayment.get('currency_name')" 
+                            t-esc="downpayment.get('amount_total')"
+                        />
+                    </cac:PrepaidPayment>
+                </t>
+                <!--ANTICIPO-->
+
+                <!--retencion-->
+                <t t-set="retention_vals" t-value="vals.get('retention_vals', False)"/>
+                <t t-if="retention_vals">
+                    <cac:AllowanceCharge>
+                        <cbc:ChargeIndicator t-out="retention_vals.get('charge_indicator')"/>
+                        <cbc:AllowanceChargeReasonCode
+                            t-out="retention_vals.get('allowance_charge_reason_code')"/>
+                        <cbc:MultiplierFactorNumeric t-out="retention_vals.get('multiplier_factor')"/>
+                        <cbc:Amount
+                            t-att-currencyID="retention_vals.get('currency_name')"
+                            t-out="format_float(retention_vals.get('amount'), retention_vals.get('currency_dp'))"/>
+                        <cbc:BaseAmount
+                            t-att-currencyID="retention_vals.get('currency_name')"
+                            t-out="format_float(retention_vals.get('base_amount'), retention_vals.get('currency_dp'))"/>
+                    </cac:AllowanceCharge>
+                </t>
+                <!--retencion-->
+
+                <!--ANTICIPO-->
+                
+                <t t-if="downpayments_vals">
+                    <!-- <t t-set="LineExtensionAmountDownpayment" t-value="0"/>
+                    <t t-foreach="record.reference_downpayments_invoice" t-as="downpayment">
+                        <t t-set="LineExtensionAmountDownpayment" t-value="LineExtensionAmountDownpayment + downpayment.amount_untaxed"/>
+                    </t> -->
+                    <cac:AllowanceCharge>
+                        <cbc:ChargeIndicator t-out="downpayments_vals.get('charge_indicator')"/>
+                        <cbc:AllowanceChargeReasonCode
+                            t-out="downpayments_vals.get('allowance_charge_reason_code')"/>
+                        <!-- <cbc:Amount t-att-currencyID="record.currency_id.name" t-esc="format_float(LineExtensionAmountDownpayment)" />
+                        <cbc:BaseAmount t-att-currencyID="record.currency_id.name" t-esc="format_float(LineExtensionAmountDownpayment * 2 + record.amount_untaxed)" /> -->
+                        <cbc:Amount
+                            t-att-currencyID="downpayments_vals.get('currency_name')"
+                            t-out="format_float(downpayments_vals.get('amount'), downpayments_vals.get('currency_dp'))"/>
+                        <cbc:BaseAmount
+                            t-att-currencyID="downpayments_vals.get('currency_name')"
+                            t-out="format_float(downpayments_vals.get('base_amount'), downpayments_vals.get('currency_dp'))"/>
+                    </cac:AllowanceCharge>
+                </t>
+                <!--ANTICIPO-->
+            </t>
+        </xpath>
+    </template>
+</odoo>

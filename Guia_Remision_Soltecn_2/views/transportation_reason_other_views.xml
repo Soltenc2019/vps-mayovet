@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_transportation_reason_other_tree" model="ir.ui.view">
+        <field name="name">transportation.reason.other.list</field>
+        <field name="model">transportation.reason.other</field>
+        <field name="arch" type="xml">
+            <tree editable="top" create="1" delete="1" edit="1" string="Otros">
+                <field name="name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_transportation_reason_other_list" model="ir.actions.act_window">
+        <field name="name">Lista otros trasporte razón</field>
+        <field name="res_model">transportation.reason.other</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_transportation_reason_other_tree"/>
+    </record>
+    <menuitem id="menu_transportation_reason_other_list"
+            action="action_transportation_reason_other_list"
+            parent="stock.menu_stock_config_settings"
+            sequence="100"/>
+</odoo>

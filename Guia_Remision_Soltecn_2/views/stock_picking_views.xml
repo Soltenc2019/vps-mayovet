@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_type_form_custom" model="ir.ui.view">
+        <field name="name">Operation Types Referral Guide</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='stock_picking_type_lot']" position="after">
+                <group string="Secuencia Guía Remisión" invisible="code not in ['incoming', 'outgoing', 'internal']">
+                    <field name="use_referrer_guide"/>
+                    <field name="sequence_prefix_guide" invisible="True"/>
+                    <field name="sequence_number_guide" invisible="True"/>
+                    <field name="custom_sequence_id" invisible="use_referrer_guide == False"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_picking_tree_custom" model="ir.ui.view">
+        <field name="name">stock.picking.tree.custom</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <field name="serial_referral_guide" optional="show"/>
+                <field name="edi_state" widget="badge" decoration-success="edi_state == 'sent'" decoration-info="edi_state in ('to_send', 'to_cancel')" decoration-danger="edi_state in ('cancelled', 'cancelled')"  string="Estado guía remisión" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_picking_internal_search_custom" model="ir.ui.view">
+            <field name="name">stock.picking.internal.search.custom</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search/filter[@name='draft']" position="before">
+                    <filter name="serial_referral_guide" string="Serial guía remisión con serie" domain="[('serial_referral_guide', '!=', False)]"/>
+                    <filter name="serial_referral_guide" string="Estado enviado" domain="[('edi_state', '=', 'sent')]"/>
+                    <filter name="serial_referral_guide" string="Estado para enviar" domain="[('edi_state', '=', 'to_send')]"/>
+                    <filter name="serial_referral_guide" string="Estado información incompleta" domain="[('edi_state', '=', 'not_enough')]"/>
+                    <separator/>
+                </xpath>
+                <xpath expr="//search/field[@name='name']" position="replace">
+                    <field name="name" string="Transfer" filter_domain="['|', '|', ('name', 'ilike', self), ('origin', 'ilike', self), ('serial_referral_guide', 'ilike', self)]"/>
+                    <field name="serial_referral_guide"/>
+                    <!-- <field name="name" string="Busqueda" filter_domain="['|', ('name', 'ilike', self), ('origin', 'ilike', self), ('serial_referral_guide', 'ilike', self)]"/> -->
+                    <!-- <field name="serial_referral_guide"  string="Busqueda" filter_domain="[('serial_referral_guide', 'ilike', self)]"/> -->
+                </xpath>
+            </field>
+        </record>
+</odoo>

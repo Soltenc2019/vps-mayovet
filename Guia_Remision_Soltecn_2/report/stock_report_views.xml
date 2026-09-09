@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="stock.action_report_delivery" model="ir.actions.report.xml">
+            <field name="name">Guía de remisión</field>
+        </record>
+    </data>
+</odoo>

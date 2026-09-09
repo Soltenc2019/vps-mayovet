@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_related_document,related.document,model_related_document,stock.group_stock_user,1,1,1,1
+access_related_document_manager,related.document.manager,model_related_document,stock.group_stock_manager,1,1,1,1
+access_catalog_63,catalog.63,model_catalog_63,stock.group_stock_user,1,0,0,0
+access_catalog_63_manager,catalog.63.manager,model_catalog_63,stock.group_stock_manager,1,1,1,1
+access_catalog_64,catalog.64,model_catalog_64,stock.group_stock_user,1,0,0,0
+access_catalog_64_manager,catalog.64.manager,model_catalog_64,stock.group_stock_manager,1,1,1,1
+access_transportation_reason_other_manager,access_transportation_reason_other,Guia_Remision_Soltecn_2.model_transportation_reason_other,stock.group_stock_manager,1,1,1,1
+access_transportation_reason_other_user,access_transportation_reason_other,Guia_Remision_Soltecn_2.model_transportation_reason_other,stock.group_stock_user,1,0,0,0

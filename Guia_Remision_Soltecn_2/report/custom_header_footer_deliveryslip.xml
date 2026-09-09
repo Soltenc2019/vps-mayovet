@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="custom_header_footer_deliveryslip">
+        <!-- <t t-set="company" t-value="user.company_id"/> -->
+        <t t-if="not o" t-set="o" t-value="doc"/>
+        <!-- <t t-set="company" t-value="user.company_id"/> -->
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+            <div class="o_boxed_header" style="font-size: 0.75rem !important;">
+                <div class="row mb8">
+                    <div class="col-3">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 100px;" alt="Logo"/>
+                    </div>
+                    <div class="col-5 text-center mb4">
+                        <h4 class="mt0" t-field="company.report_header"/>
+                        <div name="company_address" class="float-right mb4">
+                            <span class="company_address" t-field="company.partner_id"
+                                t-options='{"widget": "contact", "fields": ["address", "name","phone","email","website"], "no_marker": true}'/>
+                            <!-- <span>Sucursal: Jr. Los Delegados 638 Independencia-Lima-Lima</span> -->
+                        </div>
+                    </div>
+                    <div t-attf-class="#{'col-3' if report_type != 'html' else 'offset-1 col-4 col-sm-3'} col-auto order-first order-sm-last">
+                        <div class="border border-dark rounded mb-3 text-center" style="font-size: 1rem !important;">
+                                <div class="p-2">
+                                    <div>
+                                        <span class="font-weight-bold">RUC <t t-esc="o.company_id.vat"/></span>
+                                    </div>
+                                    <div>
+                                        <span class="font-weight-bold text-uppercase">GUÍA DE REMISIÓN REMITENTE ELECTRÓNICA</span>
+                                    </div>
+                                    <div>
+                                        <span class="font-weight-bold" t-esc="o.serial_referral_guide or 'NO VALID'"/>
+                                        <!-- <span>T001-00000024</span> -->
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <div class="pt-5">
+                <!-- This div ensures that the address is not cropped by the header. -->
+                <t t-call="web.address_layout"/>
+            </div>
+            <t t-raw="0"/>
+            <!-- <br/>
+            <br/>
+            <br/>
+            <br/> -->
+        </div>
+        <!-- <div t-attf-class="footer o_boxed_footer o_company_#{company.id}_layout" style="font-size: 0.75rem !important;">
+            <div class="text-center">
+                <ul class="list-inline">
+                    <li t-if="company.phone" class="list-inline-item"><span class="o_force_ltr" t-field="company.phone"/></li>
+                    <li t-if="company.email" class="list-inline-item"><span t-field="company.email"/></li>
+                    <li t-if="company.website" class="list-inline-item"><span t-field="company.website"/></li>
+                    <li t-if="company.vat" class="list-inline-item"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                </ul>
+                <div t-field="company.report_footer"/>
+                <div t-if="report_type == 'pdf'">
+                    Page: <span class="page"/> / <span class="topage"/>
+                </div>
+            </div>
+        </div> -->
+    </template>
+</odoo>

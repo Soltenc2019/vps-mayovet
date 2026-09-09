@@ -1,0 +1,28 @@
+{
+    'name': 'Invoice sunat Solyman',
+    'version': '17.0',
+    'summary': 'Invoice for sunat V17',
+    'category': 'Invoice',
+    'author': 'Solyman Consultores',
+    'maintainer': 'Solyman Consultores',
+    'company': 'Solyman Cnsultores de TI Sac',
+    'website': 'https://www.solymanconsulting.com',
+    'depends': ['base','account','web','account_edi','l10n_pe_edi','account_edi_ubl_cii'],
+    'qweb': [],
+    'data': [
+        'security/ir.model.access.csv',
+        'views/account_move_views.xml',
+        'views/catalog_views.xml',
+        'views/accout_journal_view.xml',
+        'views/ir_qweb_widget_templates.xml',
+        'views/report_templates.xml',
+        'views/report_invoice.xml', #Comentar en caso de error en la migracion
+        #'data/2.1/edi_invoice.xml',
+        #'data/2.1/edi_debit_note.xml',
+        #'data/2.1/edi_refund.xml',
+        'data/ubl_pe_21_templates.xml',
+        'data/catalog_data.xml',
+    ],
+    'installable': True,
+    'license': 'AGPL-3',
+}

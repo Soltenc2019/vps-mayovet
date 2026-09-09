@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+        <record id="view_employee_form_custom" model="ir.ui.view">
+            <field name="name">hr.employee.form.custom</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='personal_information']" position="after">
+                    <page name="gre_information" string="Guía información" groups="hr.group_hr_user">
+                        <group string="General">
+                            <field name="is_private_transportation" invisible="1"/>
+                            <field name="vehicle_plate" required="is_private_transportation == True"/>
+                            <field name="vehicle_model"/>
+                        </group>
+                        <group string="Transporte Privado">
+                            <field name="first_name" required="is_private_transportation == True"/>
+                            <field name="family_name" required="is_private_transportation == True"/>
+                            <field name="identification_id" required="is_private_transportation == True"/>
+                            <field name="driver_license" required="is_private_transportation == True"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+</odoo>

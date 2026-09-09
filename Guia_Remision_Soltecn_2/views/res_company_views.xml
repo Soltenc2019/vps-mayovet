@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_form_company_inherited" model="ir.ui.view">
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+            <xpath expr="//page[1]" position="after">
+               <page string="Api Rest Gre" groups="base.group_no_one">
+               <!-- , base.group_erp_manager -->
+                    <group>
+                        <group string="Datos variables">
+                            <field name="client_id"/>
+                            <field name="client_secret"/>
+                            <field name="usuario_sol"/>
+                            <field name="contrasenia_sol"/>
+                            <field name="access_token" invisible="1"/>
+                        </group>
+                        <group string="Datos fijos">
+                            <field name="grant_type"/>  
+                            <field name="scope"/>               
+                        </group>                        
+                    </group>    
+                </page>
+            </xpath>            
+            </field>
+        </record>
+    </data>
+</odoo>
