@@ -23,7 +23,7 @@
                 <t t-else="">DNI/RUC</t>: <span t-field="doc.partner_id.vat"/>
             </p>               
         </xpath> 
-        <xpath expr="//div[@class='page']" position="replace">
+        <xpath expr="//div[hasclass('page')]" position="replace">
             <div class="page">
                 <div class="oe_structure"/>
 
