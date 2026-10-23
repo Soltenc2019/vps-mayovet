@@ -4,7 +4,7 @@ import re
 
 import pytz
 
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 MONTHS = [
@@ -149,7 +149,7 @@ class SunatReport13(models.Model):
             'quantity_on_hand': float(row['quantity']),
             'total_value': float(row['value'] or 0.0),
         } for row in rows])
-        self.sunat_report_13_initial_ids = [(6, 0, initials.ids)]
+        self.sunat_report_13_initial_ids = [Command.set(initials.ids)]
 
     def update_report(self):
         for record in self:
@@ -162,7 +162,7 @@ class SunatReport13(models.Model):
                 ('create_date', '<', end_utc),
                 '|', ('quantity', '!=', 0), ('value', '!=', 0),
             ])
-            record.line_01_ids = [(6, 0, layers.ids)]
+            record.line_01_ids = [Command.set(layers.ids)]
             record.get_initial_valuation(start_utc)
         return True
 

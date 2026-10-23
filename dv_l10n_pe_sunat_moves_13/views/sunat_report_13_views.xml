@@ -4,7 +4,7 @@
         <field name="name">sunat.report.13.tree</field>
         <field name="model">sunat.report.13</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="year" options="{'format': false}"/>
                 <field name="month"/>
                 <field name="start_date"/>
@@ -12,7 +12,7 @@
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state" widget="badge" decoration-success="state == 'done'"
                        decoration-warning="state == 'generated'" decoration-info="state == 'draft'"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -51,7 +51,7 @@
                     <notebook>
                         <page string="Movimientos valorizados" name="lines">
                             <field name="line_01_ids" nolabel="1">
-                                <tree>
+                                <list>
                                     <field name="create_date" string="Fecha"/>
                                     <field name="reference"/>
                                     <field name="product_id"/>
@@ -60,26 +60,22 @@
                                     <field name="unit_cost"/>
                                     <field name="value" sum="Total"/>
                                     <field name="currency_id" column_invisible="True"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Saldos iniciales" name="initial">
                             <field name="sunat_report_13_initial_ids" nolabel="1">
-                                <tree>
+                                <list>
                                     <field name="product_id"/>
                                     <field name="quantity_on_hand"/>
                                     <field name="product_cost"/>
                                     <field name="total_value" sum="Total"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
             </form>
         </field>
     </record>

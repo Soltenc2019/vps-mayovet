@@ -13,7 +13,7 @@
     'license': 'Other proprietary',
 
     'category': 'Localization',
-    'version': '17.0.1.0.0',
+    'version': '18.0.1.0.0',
 
     # Solo modulos estandar que el cliente ya tiene instalados:
     # - stock_account: capas de valoracion (cantidad y costo de cada movimiento)
