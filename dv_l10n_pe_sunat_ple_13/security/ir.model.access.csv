@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ple_report_13_manager,ple.report.13.manager,model_ple_report_13,stock.group_stock_manager,1,1,1,1

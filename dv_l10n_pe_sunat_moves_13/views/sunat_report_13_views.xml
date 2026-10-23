@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="sunat_report_13_view_tree" model="ir.ui.view">
+        <field name="name">sunat.report.13.tree</field>
+        <field name="model">sunat.report.13</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="year" options="{'format': false}"/>
+                <field name="month"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'"
+                       decoration-warning="state == 'generated'" decoration-info="state == 'draft'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="sunat_report_13_view_form" model="ir.ui.view">
+        <field name="name">sunat.report.13.form</field>
+        <field name="model">sunat.report.13</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,generated,done"/>
+                    <button name="action_draft" string="Convertir a borrador" type="object"
+                            invisible="state != 'generated'"/>
+                    <button name="update_report" string="Actualizar datos" type="object"
+                            invisible="state != 'draft'"/>
+                    <button name="generate_report" string="Generar reportes" type="object"
+                            class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_done" string="Marcar como presentado" type="object"
+                            invisible="state != 'generated'"/>
+                    <button name="action_generated" string="Desbloquear" type="object"
+                            invisible="state != 'done'"/>
+                </header>
+                <sheet>
+                    <group name="header_group">
+                        <group name="period_group">
+                            <field name="year" options="{'format': false}" readonly="state != 'draft'"/>
+                            <field name="month" readonly="state != 'draft'"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                            <field name="establishment_code" readonly="state != 'draft'"/>
+                        </group>
+                        <group name="file_group">
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="date_generated"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Movimientos valorizados" name="lines">
+                            <field name="line_01_ids" nolabel="1">
+                                <tree>
+                                    <field name="create_date" string="Fecha"/>
+                                    <field name="reference"/>
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id"/>
+                                    <field name="unit_cost"/>
+                                    <field name="value" sum="Total"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Saldos iniciales" name="initial">
+                            <field name="sunat_report_13_initial_ids" nolabel="1">
+                                <tree>
+                                    <field name="product_id"/>
+                                    <field name="quantity_on_hand"/>
+                                    <field name="product_cost"/>
+                                    <field name="total_value" sum="Total"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="sunat_report_13_view_search" model="ir.ui.view">
+        <field name="name">sunat.report.13.search</field>
+        <field name="model">sunat.report.13</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="year"/>
+                <field name="company_id"/>
+                <filter name="draft" string="Borrador" domain="[('state', '=', 'draft')]"/>
+                <filter name="done" string="Presentado" domain="[('state', '=', 'done')]"/>
+            </search>
+        </field>
+    </record>
+</odoo>

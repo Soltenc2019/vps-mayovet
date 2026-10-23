@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <!-- En Inventario > Informes: el cliente no usa el modulo de contabilidad. -->
+    <menuitem
+            id="menu_action_ple_report_13"
+            name="PLE 13.1 Inventario Permanente Valorizado"
+            parent="stock.menu_warehouse_report"
+            action="action_ple_report_13"
+            sequence="270"/>
+</odoo>
