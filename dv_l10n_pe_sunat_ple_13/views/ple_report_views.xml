@@ -49,7 +49,7 @@
     <record id="action_ple_report_13" model="ir.actions.act_window">
         <field name="name">PLE 13.1 - Registro de Inventario Permanente Valorizado</field>
         <field name="res_model">ple.report.13</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="view_id" ref="view_ple_report_13_tree"/>
         <field name="search_view_id" ref="view_ple_report_13_search"/>
     </record>
