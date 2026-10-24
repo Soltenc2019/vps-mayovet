@@ -17,6 +17,21 @@ class AccountTax(models.Model):
         )
 
     @api.model
+    def _l10n_pe_edi_is_purchase_base_line(self, base_line):
+        """La bonificación con IGV referencial solo aplica a documentos de venta.
+        En compras (órdenes y facturas de proveedor) el impuesto 9996 se calcula
+        normal (0 %)."""
+        record = base_line.get('record')
+        if not isinstance(record, models.BaseModel) or not record:
+            return False
+        record = record[:1]
+        if record._name == 'purchase.order.line':
+            return True
+        if record._name == 'account.move.line':
+            return record.move_id.is_purchase_document(include_receipts=True)
+        return False
+
+    @api.model
     def _add_tax_details_in_base_line(self, base_line, company, rounding_method=None):
         """Odoo 18 sustituye `_compute_taxes_for_single_line` por este método.
 
@@ -29,6 +44,8 @@ class AccountTax(models.Model):
 
         taxes_data = base_line['tax_details']['taxes_data']
         if not any(td['tax']._l10n_pe_edi_is_bonus_tax() for td in taxes_data):
+            return
+        if self._l10n_pe_edi_is_purchase_base_line(base_line):
             return
 
         rounding_method = rounding_method or company.tax_calculation_rounding_method
