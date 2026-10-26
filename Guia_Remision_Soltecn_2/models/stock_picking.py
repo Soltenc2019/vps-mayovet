@@ -90,14 +90,23 @@ class AccountMove(models.Model):
 
     related_document = fields.One2many('related.document', 'stock_picking',  string='Documentos relacionado', copy=False)
     net_weight_measure_information = fields.Text(string="Sustento diferencia peso bruto total")
-    total_transport_handling_unit_quantity = fields.Char("Número de bultos o pallets", compute="_compute_total_transport_handling_unit_quantity", store=True)
+    total_transport_handling_unit_quantity = fields.Char(
+        "Número de bultos o pallets",
+        compute="_compute_total_transport_handling_unit_quantity",
+        store=True, readonly=False)
     first_package = fields.Char("Contenedor 1")
     first_package_trace = fields.Char("Número de precinto 1")
     second_package = fields.Char("Contenedor 2")
     second_package_trace = fields.Char("Número de precinto 2")
     indicador_traslado_total_damods = fields.Boolean(string="Traslado Total DAM o DS", store=True)
-    net_weight_measure = fields.Char(string="Peso bruto total items", compute="_compute_net_gross_weight_measure", store=True)
-    gross_weight_measure = fields.Char(string="Peso bruto total carga", compute="_compute_net_gross_weight_measure", store=True)
+    net_weight_measure = fields.Char(
+        string="Peso bruto total items",
+        compute="_compute_net_gross_weight_measure",
+        store=True, readonly=False)
+    gross_weight_measure = fields.Char(
+        string="Peso bruto total carga",
+        compute="_compute_net_gross_weight_measure",
+        store=True, readonly=False)
     SELECTION_AERO_PORT_LOCATION = [
         ('1', 'Puerto'),
         ('2', 'Aeropuerto'),
@@ -123,31 +132,37 @@ class AccountMove(models.Model):
     @api.depends('indicador_traslado_total_damods','transportation_reason','move_line_ids', 'move_line_ids.product_id', 'move_line_ids.quantity', 'move_line_ids_without_package', 'move_line_ids_without_package.quantity')
     def _compute_net_gross_weight_measure(self):
         for stock in self:
-            stock.gross_weight_measure = False
-            stock.net_weight_measure = False
-            # raise ValidationError(str(stock.specify_weight))
-            if stock.specify_weight:
-                # and stock.state == 'done'
-                net_weight_measure = 0
-                pallet_bulto_weight_measure = 0
-                result_package_id = self.move_line_ids.mapped('result_package_id')
-                if result_package_id:
-                    for package in result_package_id:
-                        pallet_bulto_weight_measure += package.package_type_id.package_type_weight
-                        net_weight_measure += package.total_package_items_weight
-                for move in stock.move_line_ids.filtered(lambda d: not d.result_package_id):
-                    net_weight_measure += move.product_id.weight * move.quantity
-                stock.gross_weight_measure = net_weight_measure + pallet_bulto_weight_measure
-                if not stock.indicador_traslado_total_damods and stock.transportation_reason in ('08', '09'):
-                    stock.net_weight_measure = net_weight_measure
+            if not stock.specify_weight:
+                # Modo manual: los pesos los escribe el usuario. Al no asignar
+                # nada, Odoo conserva el valor almacenado (fields.py: "Just in
+                # case the compute method does not assign a value, we already
+                # mark the computation as done").
+                continue
+
+            net_weight_measure = 0
+            pallet_bulto_weight_measure = 0
+            result_package_id = stock.move_line_ids.mapped('result_package_id')
+            for package in result_package_id:
+                pallet_bulto_weight_measure += package.package_type_id.package_type_weight
+                net_weight_measure += package.total_package_items_weight
+            for move in stock.move_line_ids.filtered(lambda d: not d.result_package_id):
+                net_weight_measure += move.product_id.weight * move.quantity
+
+            stock.gross_weight_measure = net_weight_measure + pallet_bulto_weight_measure
+            if not stock.indicador_traslado_total_damods and stock.transportation_reason in ('08', '09'):
+                stock.net_weight_measure = net_weight_measure
+            else:
+                stock.net_weight_measure = False
 
     @api.depends('move_line_ids','move_line_ids.result_package_id')
     def _compute_total_transport_handling_unit_quantity(self):
         for stock in self:
-            stock.total_transport_handling_unit_quantity = False
-            package_quantity = self.move_line_ids.mapped('result_package_id')
+            package_quantity = stock.move_line_ids.mapped('result_package_id')
             if package_quantity:
+                # Hay paquetes: el número de bultos lo calcula el sistema.
                 stock.total_transport_handling_unit_quantity = len(package_quantity)
+            # Sin paquetes no se asigna nada, de modo que se conserva el valor
+            # que el usuario haya escrito a mano.
 
     @api.onchange('is_m1l')
     def onchange_is_m1l(self):
