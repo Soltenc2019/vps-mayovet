@@ -93,7 +93,7 @@ class AccountMove(models.Model):
     total_transport_handling_unit_quantity = fields.Char(
         "Número de bultos o pallets",
         compute="_compute_total_transport_handling_unit_quantity",
-        store=True, readonly=False)
+        store=True, readonly=False, tracking=True)
     first_package = fields.Char("Contenedor 1")
     first_package_trace = fields.Char("Número de precinto 1")
     second_package = fields.Char("Contenedor 2")
@@ -102,11 +102,11 @@ class AccountMove(models.Model):
     net_weight_measure = fields.Char(
         string="Peso bruto total items",
         compute="_compute_net_gross_weight_measure",
-        store=True, readonly=False)
+        store=True, readonly=False, tracking=True)
     gross_weight_measure = fields.Char(
         string="Peso bruto total carga",
         compute="_compute_net_gross_weight_measure",
-        store=True, readonly=False)
+        store=True, readonly=False, tracking=True)
     SELECTION_AERO_PORT_LOCATION = [
         ('1', 'Puerto'),
         ('2', 'Aeropuerto'),
@@ -129,9 +129,20 @@ class AccountMove(models.Model):
     #         stock._compute_net_gross_weight_measure()
     #     return res
 
-    @api.depends('indicador_traslado_total_damods','transportation_reason','move_line_ids', 'move_line_ids.product_id', 'move_line_ids.quantity', 'move_line_ids_without_package', 'move_line_ids_without_package.quantity')
+    @api.depends(
+        'indicador_traslado_total_damods', 'transportation_reason',
+        'move_line_ids', 'move_line_ids.quantity',
+        'move_line_ids.product_id', 'move_line_ids.product_id.weight',
+        'move_line_ids.result_package_id',
+        'move_line_ids.result_package_id.total_package_items_weight',
+        'move_line_ids.result_package_id.package_type_id.package_type_weight',
+        'move_line_ids_without_package', 'move_line_ids_without_package.quantity')
     def _compute_net_gross_weight_measure(self):
         for stock in self:
+            if stock.edi_state in ('cdr_aceptado', 'cancelled'):
+                # Documento cerrado en SUNAT: el peso declarado no se recalcula.
+                continue
+
             if not stock.specify_weight:
                 # Modo manual: los pesos los escribe el usuario. Al no asignar
                 # nada, Odoo conserva el valor almacenado (fields.py: "Just in
@@ -148,15 +159,21 @@ class AccountMove(models.Model):
             for move in stock.move_line_ids.filtered(lambda d: not d.result_package_id):
                 net_weight_measure += move.product_id.weight * move.quantity
 
-            stock.gross_weight_measure = net_weight_measure + pallet_bulto_weight_measure
-            if not stock.indicador_traslado_total_damods and stock.transportation_reason in ('08', '09'):
-                stock.net_weight_measure = net_weight_measure
-            else:
-                stock.net_weight_measure = False
+            gross = net_weight_measure + pallet_bulto_weight_measure
+            if gross:
+                # Solo se sobrescribe si los productos tienen peso configurado;
+                # si el cálculo da 0 se conserva lo que haya escrito el usuario.
+                stock.gross_weight_measure = gross
+                if not stock.indicador_traslado_total_damods and stock.transportation_reason in ('08', '09'):
+                    stock.net_weight_measure = net_weight_measure
+                else:
+                    stock.net_weight_measure = False
 
     @api.depends('move_line_ids','move_line_ids.result_package_id')
     def _compute_total_transport_handling_unit_quantity(self):
         for stock in self:
+            if stock.edi_state in ('cdr_aceptado', 'cancelled'):
+                continue
             package_quantity = stock.move_line_ids.mapped('result_package_id')
             if package_quantity:
                 # Hay paquetes: el número de bultos lo calcula el sistema.

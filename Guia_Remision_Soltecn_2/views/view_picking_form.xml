@@ -72,7 +72,7 @@
                                 <field name="arrival_date" readonly="edi_state == 'cdr_aceptado'"/>
                                 <field name="sale_id" invisible="1"/>
                                 <field name="total_transport_handling_unit_quantity" required="transportation_reason in ('08','09')"/>
-                                <field name="gross_weight_measure" readonly="edi_state == 'cdr_aceptado' or specify_weight == True" required="state == 'done' or specify_weight == True or transportation_reason != False"/>
+                                <field name="gross_weight_measure" readonly="edi_state == 'cdr_aceptado'" required="state == 'done' or specify_weight == True or transportation_reason != False"/>
                                 <field name="condition" readonly="True"/>
                                 <field name="comments" readonly="edi_state == 'cdr_aceptado'"/>
                             </group>
