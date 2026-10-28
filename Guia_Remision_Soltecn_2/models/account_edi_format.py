@@ -445,11 +445,12 @@ class AccountEdiFormat(models.Model):
         if response.status_code == 200:
             resultado_json = response.json()
             access_token = resultado_json.get('access_token')
-            company_id = self.env["res.company"].search([("id", "=", referral_guide.company_id.id)], limit=1)
+            # sudo: usuarios sin permiso de escritura en res.company también renuevan el token
+            company = referral_guide.company_id
             values = {
                 "access_token": access_token
             }
-            company_id.write(values)
+            company.sudo().with_company(company).write(values)
             return {'error': "(Api) Token nuevo generado - Vuelva a enviar el documento", 'blocking_level': "401", 'api': True}
         elif response.status_code == 422:
             resultado_json = response.json()
