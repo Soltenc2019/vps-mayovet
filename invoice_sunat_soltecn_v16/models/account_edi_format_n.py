@@ -290,7 +290,43 @@ class AccountEdiFormat(models.Model):
         #res = self._l10n_pe_edi_post_invoice_web_service(invoice, edi_filename, edi_str)
 
         return {invoice: res}
-    
+
+    def _generate_edi_invoice_bstr(self, invoice):
+        # OVERRIDE l10n_pe_edi
+        # El core renderiza 'l10n_pe_edi.ubl_pe_21_ubl_extensions_empty_signature' con QWeb.
+        # Tras una comunicación de baja (que la llama con t-call) la caché de QWeb queda
+        # con la versión compilada sin xmlns:ext y el XML de facturas falla al parsear.
+        # Aquí se arma el mismo bloque con el namespace explícito, sin pasar por QWeb.
+        latam_invoice_type = self._get_latam_invoice_type(invoice.l10n_latam_document_type_id.code)
+        if not latam_invoice_type:
+            return _("Missing LATAM document code.").encode()
+
+        builder = self.env['account.edi.xml.ubl_pe']
+        xml_content, errors = builder._export_invoice(invoice)
+
+        if errors:
+            return "".join([
+                _("Errors occured while creating the EDI document (format: %s):", builder._description),
+                "\n",
+                "\n".join(errors)
+            ]).encode()
+
+        edi_tree = objectify.fromstring(xml_content)
+        namespaces = {'cbc': 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2'}
+        ubl_version_id_element = edi_tree.xpath('.//cbc:UBLVersionID', namespaces=namespaces)[0]
+        ubl_extensions_str = (
+            '<ext:UBLExtensions xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2">'
+            '<ext:UBLExtension>'
+            '<ext:ExtensionContent>'
+            '<ds:Signature Id="placeholder" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>'
+            '</ext:ExtensionContent>'
+            '</ext:UBLExtension>'
+            '</ext:UBLExtensions>'
+        )
+        ubl_version_id_element.addprevious(objectify.fromstring(ubl_extensions_str))
+
+        return etree.tostring(edi_tree)
+
     # def _l10n_pe_edi_sign_invoices_sunat(self, invoice, edi_filename, edi_str):
     #     """This method calls _l10n_pe_edi_sign_service_sunat() to allow inherit this second from other models"""
     #     return self._l10n_pe_edi_sign_service_sunat(invoice.company_id, edi_filename, edi_str, invoice.l10n_latam_document_type_id.code, invoice=invoice)
