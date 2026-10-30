@@ -1,30 +1,21 @@
-from odoo import api, models
+from odoo import models
 
 
 class AccountTax(models.Model):
     _inherit = 'account.tax'
 
-    @api.model
-    def _add_tax_details_in_base_line(self, base_line, company, rounding_method=None):
-        """invoice_sunat_soltecn_v16 fuerza el IGV referencial del 18 % en todo
-        impuesto 9996, incluidos los hijos de un grupo ("0% Libre Final" pasaba a
-        cobrar 18 %). Aquí se restaura el cálculo estándar de esos hijos: el grupo
-        ya resuelve su importe con su propio porcentaje y el resto de hijos.
-        """
-        super()._add_tax_details_in_base_line(base_line, company, rounding_method=rounding_method)
+    def _l10n_pe_edi_is_bonus_tax(self):
+        """invoice_sunat_soltecn_v16 trata como bonificación todo impuesto 9996:
+        le fuerza el IGV referencial del 18 % (_add_tax_details_in_base_line) y lo
+        oculta de los totales (_get_tax_totals_summary).
 
-        rounding_method = rounding_method or company.tax_calculation_rounding_method
-        rate = base_line['rate']
-        for tax_data in base_line['tax_details']['taxes_data']:
-            if not tax_data.get('group') or not tax_data['tax']._l10n_pe_edi_is_bonus_tax():
-                continue
-            # Mismo cálculo que account.tax._add_tax_details_in_base_line del core.
-            tax_amount = tax_data['tax_amount'] / rate if rate else 0.0
-            base_amount = tax_data['base_amount'] / rate if rate else 0.0
-            if rounding_method == 'round_per_line':
-                tax_amount = company.currency_id.round(tax_amount)
-                base_amount = company.currency_id.round(base_amount)
-            tax_data['raw_tax_amount_currency'] = tax_data['tax_amount']
-            tax_data['raw_tax_amount'] = tax_amount
-            tax_data['raw_base_amount_currency'] = tax_data['base_amount']
-            tax_data['raw_base_amount'] = base_amount
+        Eso solo vale para un 9996 usado suelto. Los hijos 9996 de un grupo
+        ("18% Libre Final" / "0% Libre Final") se calculan con su propio porcentaje
+        y el grupo ya los compensa con sus otros hijos ("Substraer base",
+        "... Gasto"); tratarlos como bonificación cobraba un IGV inexistente en el
+        0 % y restaba dos veces el IGV en los totales del 18 %.
+        """
+        if not super()._l10n_pe_edi_is_bonus_tax():
+            return False
+        return not self.with_context(active_test=False).search_count(
+            [('children_tax_ids', 'in', self.ids)], limit=1)
