@@ -25,7 +25,9 @@ Correcciones sobre invoice_sunat_soltecn_v16 para líneas gratuitas (9996):
         'invoice_sunat_soltecn_v16',
         'l10n_pe_edi',
     ],
-    'data': [],
+    'data': [
+        'views/report_invoice.xml',
+    ],
     'installable': True,
     'license': 'AGPL-3',
 }

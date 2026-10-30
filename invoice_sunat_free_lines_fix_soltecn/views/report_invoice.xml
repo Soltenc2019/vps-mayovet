@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- PDF: los importes de los grupos de impuestos (p. ej. "Factura Gratuita") se muestran en positivo. -->
+    <template id="tax_groups_totals_2_abs" inherit_id="invoice_sunat_soltecn_v16.tax_groups_totals_2">
+        <xpath expr="//span[@t-out=&quot;tax_group['tax_amount_currency']&quot;]" position="attributes">
+            <attribute name="t-out">abs(tax_group['tax_amount_currency'])</attribute>
+        </xpath>
+    </template>
+</odoo>
