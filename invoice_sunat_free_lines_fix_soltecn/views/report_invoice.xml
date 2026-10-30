@@ -6,4 +6,17 @@
             <attribute name="t-out">abs(tax_group['tax_amount_currency'])</attribute>
         </xpath>
     </template>
+
+    <!-- PDF: el layout "boxed" pinta las filas o_total con fondo oscuro y texto claro; se quita esa clase. -->
+    <template id="document_tax_totals_2_light_total" inherit_id="invoice_sunat_soltecn_v16.document_tax_totals_2">
+        <xpath expr="//tr[contains(@class, 'o_total')]" position="attributes">
+            <attribute name="class">border-black</attribute>
+        </xpath>
+    </template>
+
+    <template id="report_invoice_document_light_total" inherit_id="invoice_sunat_soltecn_v16.report_invoice_document">
+        <xpath expr="//tr[@class='o_total']" position="attributes">
+            <attribute name="class">border-black</attribute>
+        </xpath>
+    </template>
 </odoo>
