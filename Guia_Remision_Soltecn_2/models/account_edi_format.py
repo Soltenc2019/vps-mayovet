@@ -329,7 +329,7 @@ class AccountEdiFormat(models.Model):
                             referral_guide_QR = url_qr_hash.text
                     except Exception:
                         referral_guide_QR = False
-                    return {'cdr': cdr_api_rest_decoded.get('cdr_content_zip'), 'referral_guide_QR': referral_guide_QR, 'blocking_level': "(Warning)" + nota_cdr_warning}
+                    return {'cdr': cdr_api_rest_decoded.get('cdr_content_zip'), 'referral_guide_QR': referral_guide_QR, 'blocking_level': ("(Warning)" + nota_cdr_warning) if nota_cdr_warning else False}
                 else:
                     return {'error': "No se genera CDR", 'blocking_level': "0"}
             elif resultado_json.get('codRespuesta') == "98":

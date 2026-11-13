@@ -5,6 +5,10 @@ class ResPartnerCustom(models.Model):
     
     contact_address = fields.Char(compute='_compute_complete_address', store=True)
     property_code = fields.Char(string="Código de establecimiento")
+    mtc_transportation_code = fields.Char(
+        string="Registro MTC",
+        help="Número de registro MTC del transportista (transporte público). "
+             "Se envía a SUNAT en la guía para evitar la observación 4391.")
 
     @api.depends('street', 'zip', 'city', 'country_id','l10n_pe_district')
     def _compute_complete_address(self):

@@ -1,6 +1,17 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+import base64
+import io
+import zipfile
 from datetime import datetime
+from lxml import etree
+from pytz import timezone
+
+
+def _lima_today():
+    """Fecha actual en America/Lima (SUNAT valida con la fecha local, no UTC)."""
+    return datetime.now(tz=timezone('America/Lima')).date()
+
 
 class AccountMove(models.Model): 
     
@@ -26,7 +37,7 @@ class AccountMove(models.Model):
     arrival_date  = fields.Date('Fecha llegada', copy=False, store=True, readonly=False,help="Fecha de llegada")
 
     #? NUEVO CAMPO SUNAT 01/06/2026
-    merch_delivery_to_driver = fields.Date(string="Fecha de entrega de bienes al transportista", store=True, copy=False, readonly=False)
+    merch_delivery_to_driver = fields.Date(string="Fecha de entrega de bienes al transportista", store=True, copy=False, readonly=False, default=fields.Date.context_today)
     
     starting_address_departamento = fields.Many2one(related='starting_address.state_id',string='Ubigeo origen departamento', readonly=True)
     starting_address_provincia = fields.Many2one(related='starting_address.city_id',string='Ubigeo origen provincia', readonly=True)
@@ -225,6 +236,9 @@ class AccountMove(models.Model):
     'transportation_reason','state', 'transport_type')
     def _compute_edi_state(self):
         for record in self:
+            # Una guía ya aceptada/cancelada en SUNAT no debe volver a "Para enviar".
+            if record.edi_state in ('cdr_aceptado', 'cancelled'):
+                continue
             record.edi_state = 'not_enough'
             enough_information = False
             if record.departure_date and record.arrival_date and record.transportation_reason and record.state == "done" and record.transport_type:
@@ -323,8 +337,71 @@ class AccountMove(models.Model):
         for stock in self:
             if not self.specify_weight and not self.gross_weight_measure and self.edi_state == 'to_send':
                 raise ValidationError("Es necesario ingresar el peso bruto total de la carga.")
-            stock.departure_date = datetime.today()
+            # Fechas en hora Lima (el servidor corre en UTC). Solo se actualizan si estan
+            # vacias o vencidas; una fecha futura ingresada por el usuario se respeta.
+            today = _lima_today()
+            if not stock.departure_date or stock.departure_date < today:
+                stock.departure_date = today
+            if stock.transport_type == '01' and not stock.is_m1l and (
+                    not stock.merch_delivery_to_driver or stock.merch_delivery_to_driver < today):
+                stock.merch_delivery_to_driver = today
         return super().button_validate()
+
+    def _get_cdr_attachment(self):
+        """Adjunto zip con el CDR aceptado (se crea al verificar el ticket con éxito)."""
+        self.ensure_one()
+        if not self.sequence_serial_guide or not self.sequence_number_guide:
+            return self.env['ir.attachment']
+        filename = '%s-09-%s-%s.zip' % (
+            self.company_id.vat, self.sequence_serial_guide[:4], self.sequence_number_guide)
+        return self.env['ir.attachment'].search([
+            ('res_model', '=', self._name), ('res_id', '=', self.id), ('name', '=', filename),
+        ], limit=1)
+
+    def action_restore_from_cdr(self):
+        """Restaura el estado 'Aceptado' leyendo el CDR guardado en adjuntos, para guías
+        aceptadas cuyo estado fue revertido (p. ej. por un reenvío con error 1033)."""
+        for record in self:
+            attachment = record._get_cdr_attachment()
+            if not attachment:
+                raise UserError(_("No se encontró un CDR adjunto para la guía %s.", record.name))
+            with zipfile.ZipFile(io.BytesIO(base64.b64decode(attachment.datas))) as zf:
+                cdr_name = next((n for n in zf.namelist() if n.lower().endswith('.xml')), None)
+                if not cdr_name:
+                    raise UserError(_("El adjunto de la guía %s no contiene un CDR.", record.name))
+                cdr_tree = etree.fromstring(zf.read(cdr_name))
+            code = cdr_tree.find('.//{*}ResponseCode')
+            if code is None or (code.text or '').strip() != '0':
+                raise UserError(_("El CDR de la guía %s no indica aceptación (ResponseCode 0).", record.name))
+            qr = cdr_tree.find('.//{*}DocumentReference//{*}DocumentDescription')
+            note = cdr_tree.find('.//{*}Note')
+            record.write({
+                'edi_state': 'cdr_aceptado',
+                'error': False,
+                'blocking_level': ('(Warning)' + note.text) if note is not None and note.text else False,
+                'referral_guide_QR': qr.text if qr is not None else record.referral_guide_QR,
+            })
+        return True
+
+    def date_validation(self):
+        """SUNAT (error 3618 y afines): la fecha de emision se genera al momento del envio
+        (hoy, hora Lima), por lo que las fechas de traslado no pueden ser anteriores a hoy."""
+        self.ensure_one()
+        today = _lima_today()
+        errors = []
+        if self.departure_date and self.departure_date < today:
+            errors.append(_("La Fecha salida (%s) es anterior a la fecha de emisión de hoy (%s).",
+                            self.departure_date.strftime('%d/%m/%Y'), today.strftime('%d/%m/%Y')))
+        if self.transport_type == '01' and not self.is_m1l:
+            if not self.merch_delivery_to_driver:
+                errors.append(_("Falta la Fecha de entrega de bienes al transportista."))
+            elif self.merch_delivery_to_driver < today:
+                errors.append(_("La Fecha de entrega de bienes al transportista (%s) es anterior a la fecha de emisión de hoy (%s).",
+                                self.merch_delivery_to_driver.strftime('%d/%m/%Y'), today.strftime('%d/%m/%Y')))
+        if errors:
+            return _("No se puede enviar la guía %s a SUNAT:\n- %s\n\nActualice las fechas a hoy o posterior y vuelva a enviar.",
+                     self.name, "\n- ".join(errors))
+        return False
             
     def verify_values_before_send(self):
         document_types_validation_return = self.document_types_validation()
@@ -343,6 +420,14 @@ class AccountMove(models.Model):
     def action_process_edi_web_services(self):
 
         docs = self.filtered(lambda d: d.edi_state in ('to_send'))
+        for doc in docs:
+            if doc._get_cdr_attachment():
+                raise UserError(_(
+                    "La guía %s ya tiene un CDR aceptado por SUNAT. No debe reenviarse "
+                    "(SUNAT respondería 1033). Use «Restaurar estado desde CDR».", doc.name))
+            date_error = doc.date_validation()
+            if date_error:
+                raise ValidationError(date_error)
         doc_type = 'reference_guide'
         self._process_job(docs, doc_type)
     

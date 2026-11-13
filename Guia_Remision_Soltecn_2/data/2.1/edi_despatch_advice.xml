@@ -195,6 +195,7 @@
                         </cac:PartyIdentification>
                         <cac:PartyLegalEntity>
                             <cbc:RegistrationName t-out="record.employee_company.name"/>
+                            <cbc:CompanyID t-if="record.employee_company.mtc_transportation_code" t-out="record.employee_company.mtc_transportation_code.strip()[:20]"/>
                         </cac:PartyLegalEntity>
                     </cac:CarrierParty>
                     <!-- <cac:TransportMeans>

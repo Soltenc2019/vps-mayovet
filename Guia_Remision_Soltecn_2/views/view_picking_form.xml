@@ -15,6 +15,7 @@
                             <!-- <field name="edi_web_services_to_process" class="oe_inline"/> -->
                          </div>
                          <button name="action_process_edi_web_services" type="object" class="oe_link" string="Enviar ahora" /> 
+                         <button name="action_restore_from_cdr" type="object" class="oe_link" string="Restaurar estado desde CDR" invisible="not error" help="Solo si la guía ya fue aceptada por SUNAT y tiene el CDR adjunto"/>
                     </div>
                     <div class="alert alert-info" role="alert" style="margin-bottom:0px;" invisible="edi_state != 'ticket' or serial_referral_guide == False">
                          <div>Verificar estado guía de remisión:
