@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="round_cost_wizard_form" model="ir.ui.view">
+        <field name="name">round.cost.wizard.form</field>
+        <field name="model">round.cost.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Redondear costos de productos">
+                <field name="state" invisible="1"/>
+                <div class="alert alert-warning" role="alert" invisible="state != 'draft'">
+                    Redondea el <b>Costo</b> ya guardado. No crea revaluaciones ni asientos contables.
+                    Haga primero un respaldo de la base de datos y pruebe en TEST.
+                </div>
+                <div class="alert alert-info" role="alert" invisible="state != 'preview'">
+                    Revise los cambios. Nada se ha modificado todavía.
+                </div>
+                <div class="alert alert-success" role="alert" invisible="state != 'done'">
+                    Costos redondeados. Ya puede desinstalar este módulo.
+                </div>
+                <group>
+                    <field name="decimals" readonly="state == 'done'"/>
+                    <field name="company_ids" widget="many2many_tags" readonly="state == 'done'"
+                           options="{'no_create': True}"/>
+                    <field name="include_lots" readonly="state == 'done'"/>
+                    <field name="line_count" invisible="state == 'draft'"/>
+                </group>
+                <field name="line_ids" invisible="state == 'draft'" readonly="1">
+                    <list create="0" delete="0" edit="0" limit="200">
+                        <field name="name"/>
+                        <field name="company_id"/>
+                        <field name="old_cost"/>
+                        <field name="new_cost"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_preview" type="object" string="Vista previa"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_preview" type="object" string="Recalcular"
+                            invisible="state != 'preview'"/>
+                    <button name="action_apply" type="object" string="Aplicar redondeo"
+                            class="btn-primary" invisible="state != 'preview' or line_count == 0"
+                            confirm="¿Aplicar el redondeo a todos los costos listados?"/>
+                    <button string="Cerrar" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_round_cost_wizard" model="ir.actions.act_window">
+        <field name="name">Redondear costos (uso único)</field>
+        <field name="res_model">round.cost.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_round_cost_wizard"
+              name="Redondear costos (uso único)"
+              parent="stock.menu_stock_config_settings"
+              action="action_round_cost_wizard"
+              groups="stock.group_stock_manager"
+              sequence="99"/>
+</odoo>

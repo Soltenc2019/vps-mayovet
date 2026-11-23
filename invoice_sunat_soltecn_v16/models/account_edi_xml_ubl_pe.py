@@ -149,6 +149,19 @@ class AccountEdiXmlUBLPE(models.AbstractModel):
         if line.tax_ids[0].l10n_pe_edi_tax_code == '9996' and line.discount == 100.00 and line.l10n_pe_edi_affectation_reason == '37':
             vals['line_extension_amount'] = line.quantity * line.price_unit
             vals['pricing_reference_vals']['alternative_condition_price_vals'][0]['price_amount'] = line.currency_id.round(line.price_unit)
+        elif (
+            line.tax_ids
+            and line.tax_ids[0].l10n_pe_edi_tax_code == '9996'
+            and line.l10n_pe_edi_affectation_reason in FREE_AFFECTATION_REASONS
+            and line.quantity
+            and vals.get('line_extension_amount')
+        ):
+            # SUNAT (error 3271): LineExtensionAmount debe cuadrar con cantidad x valor referencial
+            # (tolerancia 1.00). El valor referencial redondeado a 2 decimales se desvia mucho
+            # en lineas con precio unitario chico y cantidad alta, asi que se deriva del
+            # importe de la linea sin redondear antes.
+            alt_vals = vals['pricing_reference_vals']['alternative_condition_price_vals'][0]
+            alt_vals['price_amount'] = vals['line_extension_amount'] / line.quantity
         return vals
     
     # def _get_invoice_line_vals(self, line, line_id, taxes_vals):
