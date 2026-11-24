@@ -162,6 +162,9 @@ class AccountEdiXmlUBLPE(models.AbstractModel):
             # importe de la linea sin redondear antes.
             alt_vals = vals['pricing_reference_vals']['alternative_condition_price_vals'][0]
             alt_vals['price_amount'] = vals['line_extension_amount'] / line.quantity
+            # La plantilla imprime con 'Product Price' decimales (3 en esta BD); se sube a 4
+            # para que el error maximo sea 0.00005 x cantidad.
+            alt_vals['price_amount_dp'] = max(alt_vals.get('price_amount_dp') or 0, 4)
         return vals
     
     # def _get_invoice_line_vals(self, line, line_id, taxes_vals):
